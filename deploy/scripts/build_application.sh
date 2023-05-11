@@ -43,7 +43,7 @@ python -m venv /applications/ideajet/venv
 . "/applications/ideajet/venv/bin/activate"
 pip install --upgrade pip
 pip install wheel
-pip install "/var/lib/jenkins/workspace/${package_name}/dist/ideajet-0.1.0-py3-none-any.whl"
+pip install "/var/lib/jenkins/workspace/${package_name}/dist/idea_jet-0.1.0-py3-none-any.whl"
 echo "Application packages installed into Venv"
 
 echo "Gzipping Application"
