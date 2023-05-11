@@ -1,0 +1,156 @@
+- name: remove current project dir
+  file:
+    path: "/applications/ideajet/"
+    state: absent
+
+- name: make project dir
+  file:
+    path: "/applications/ideajet/"
+    state: directory
+
+- name: unarchive project tar
+  unarchive:
+    src:  "/applications/ideajet.tar"
+    dest:  "/applications/ideajet/"
+    copy: True
+    list_files: True
+
+- name: copy env variables
+  command: cp /etc/ideajet/.env "/ideajet/.env"
+
+- name: install python3 and pip3
+  package:
+    name:
+      - python3-pip
+      - python-is-python3
+      - python3.10-venv
+
+- name: install postgresql
+  package:
+    name: 
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
+      - python3-psycopg2
+      - acl
+
+- name: create database
+  postgresql_db:
+    name:  "ideajet"
+  become: true
+  become_user: postgres
+
+- name: create postgresql user
+  postgresql_user:
+    name:  "ideajet"
+    password: "{{ db_password }}"
+    db:  "ideajet"
+    expires: infinity
+  become: true
+  become_user: postgres
+
+- name: migrate
+  django_manage:
+    command: migrate
+    app_path: "/ideajet/src/"
+    settings: "pa_backend.settings.{{ deploy_env }}"
+    virtualenv: "applications/ideajet/venv"
+
+- name: Install and ensure nginx is at the latest version
+  apt:
+    name: nginx
+    state: latest
+- name: start nginx
+  service: 
+    name: nginx
+    state: started
+    enabled: yes  # if you want to also enable nginx
+
+- name: copy nginx site file file
+  copy:
+    src: "{{ nginx_site_filename }}"
+    dest: "/ /etc/nginx/sites-available/{{ nginx_config_filename }}"
+    owner: root
+    group: root
+    mode: 0644
+
+- name: Activate site
+  shell: "ln -s /etc/nginx/sites-available/{{ nginx_config_filename }} /etc/nginx/sites-enabled/"
+
+- name: restart nginx
+  service: name=nginx state=restarted
+
+- name: copy rabbitmq install script
+  copy:
+    src: "/var/lib/jenkins/workspace/ideajet/deploy/scripts/installrabbitmq.sh"
+    dest: "/tmp/installrabbitmq.sh"
+    mode: 0777
+
+- name: run install of rabbitmq 
+  shell: sh /tmp/installrabbitmq.sh
+
+- name: remove rabbitmq install script
+  file:
+    path: /tmp/installrabbitmq.sh
+    state: absent
+
+- name: Ensure rabbitmq is started and enabled (if configured).
+  service:
+    name: rabbitmq-server
+    state: started
+    enabled: true
+
+- name: create celery var and opt directories
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ user }}"
+    group: "{{ user }}"
+    mode: 0777
+  loop:
+    - /var/log/celery
+    - /var/run/celery
+    - /opt/celery
+
+- name: create /etc/conf.d dir
+  file:
+    path: /etc/conf.d
+    state: directory
+
+- name: copy celery conf file
+  copy:
+    src: "celery/{{ deploy_env }}/celery"
+    dest: "/etc/conf.d/celery"
+    mode: 0777
+  notify: daemon_reload
+
+- name: copy celery service file
+  copy:
+    src: "celery/{{ deploy_env }}/celery.service"
+    dest: "/etc/systemd/system/celery.service"
+    mode: 0777
+  notify: daemon_reload
+
+- name: enable celery service
+  service:
+    name: celery.service
+    state: started
+    enabled: true
+
+- name: copy celery beat service file
+  copy:
+    src: "celery/{{ deploy_env }}/celerybeat.service"
+    dest: "/etc/systemd/system/celerybeat.service"
+    mode: 0777
+  notify: daemon_reload
+
+- name: enable celerybeat service
+  service:
+    name: celerybeat.service
+    state: started
+    enabled: true
+
+- name: restart_celery
+  service:
+    name: celery
+    state: restarted

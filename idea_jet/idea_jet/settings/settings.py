@@ -1,18 +1,17 @@
-from pathlib import Path
-from decouple import config
 from datetime import timedelta
+from decouple import config
+import os
+from pathlib import Path
+
 
 
 AUTH_USER_MODEL = 'idea_jet_auth.User'
 APPEND_SLASH=False
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-u6(%sla)^h5@vzx4h80ixwl@$6@h-n8nf5a88*qdvjt1nho#$b'
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -71,6 +70,13 @@ TEMPLATES = [
         },
     },
 ]
+
+STATIC_ROOT = f"/var/www/ideajet/site"   #collectstatic places all files found here in prod
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "idea_jet_business", "static")
+]
+
+TEMPLATES[0]['DIRS'] = [STATIC_ROOT]
 
 WSGI_APPLICATION = 'idea_jet.wsgi.application'
 
