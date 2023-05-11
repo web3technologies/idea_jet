@@ -23,12 +23,12 @@ deactivate
 echo "*** Idea Jet Module Created***"
 
 echo "Building the application"
-application_build_path=/applications/ideajet_$environment.tar
-python -m venv /applications/ideajet_$environment/venv
-. "/applications/ideajet_$environment/venv/bin/activate"
+application_build_path=/applications/ideajet.tar
+python -m venv /applications/ideajet/venv
+. "/applications/ideajet/venv/bin/activate"
 pip install --upgrade pip
 pip install wheel
-pip install /var/lib/jenkins/workspace/ideajet_$environment/dist/ideajet-0.1.0-py3-none-any.whl
+pip install /var/lib/jenkins/workspace/int_ideajet/dist/ideajet-0.1.0-py3-none-any.whl
 echo "Application packages installed into Venv"
 
 echo "Gzipping Application"
