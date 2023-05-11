@@ -1,4 +1,5 @@
 - name: remove current project dir
+  hosts: web_servers
   file:
     path: "/applications/ideajet/"
     state: absent
