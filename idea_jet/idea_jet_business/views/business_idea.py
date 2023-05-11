@@ -8,4 +8,8 @@ class BusinessIdeaView(APIView):
 
     def post(self, *args, **kwargs):
         business_idea = BusinessIdeaGeneration().run()
+        # business_idea = {
+        #     "test1": "test",
+        #     "test2": 'test'
+        # }
         return Response(data=business_idea, status=status.HTTP_201_CREATED)
