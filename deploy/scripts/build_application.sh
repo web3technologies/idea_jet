@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Creating the IdeaJet Application"
+echo "Creating the idea_jet Application"
 
 while getopts ":e:" opt; do
   case $opt in
@@ -18,12 +18,12 @@ if [ -z "$environment" ]; then
         exit 1
 fi
 
-rm -rf /applications/ideajet/
-mkdir /applications/ideajet/
+rm -rf /applications/idea_jet/
+mkdir /applications/idea_jet/
 
 echo "BUILDING"
 
-workspace_name="${environment}_ideajet"
+workspace_name="${environment}_idea_jet"
 jenkins_proj_path="/var/lib/jenkins/workspace/$workspace_name"
 JENKINS_VENV_DIR=$jenkins_proj_path/venv 
 
@@ -38,13 +38,13 @@ deactivate
 echo "*** Idea Jet Module Created***"
 
 echo "Building the application"
-application_build_path=/applications/ideajet.tar
-python -m venv /applications/ideajet/venv
-. "/applications/ideajet/venv/bin/activate"
+application_build_path=/applications/idea_jet.tar
+python -m venv /applications/idea_jet/venv
+. "/applications/idea_jet/venv/bin/activate"
 pip install --upgrade pip
 pip install wheel
 pip install "/var/lib/jenkins/workspace/${workspace_name}/dist/idea_jet-0.1.0-py3-none-any.whl"
 echo "Application packages installed into Venv"
 
 echo "Gzipping Application"
-tar -czf /tmp/ideajet.tar /applications/ideajet/
+tar -czf /tmp/idea_jet.tar /applications/idea_jet/
