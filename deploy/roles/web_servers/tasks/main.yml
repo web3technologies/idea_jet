@@ -20,6 +20,11 @@
     path: "/applications/idea_jet/static/"
     state: directory
 
+- name: make static dir
+  file:
+    path: "/applications/idea_jet_media/"
+    state: directory
+
 - name: unarchive project tar
   unarchive:
     src:  "/tmp/idea_jet.tar"

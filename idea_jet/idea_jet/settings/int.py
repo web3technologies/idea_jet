@@ -7,4 +7,4 @@ CORS_ORIGIN_WHITELIST = [
     "https://int.app.ideajet.ai"
 ]
 
-MEDIA_ROOT = "/applications/idea_jet/media/"
+MEDIA_ROOT = "/applications/idea_jet_media/"
