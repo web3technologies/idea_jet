@@ -17,7 +17,7 @@
 
 - name: unarchive project tar
   unarchive:
-    src:  "/applications/ideajet.tar"
+    src:  "/tmp/ideajet.tar"
     dest:  "/applications/ideajet/"
     copy: True
     list_files: True
@@ -30,7 +30,7 @@
     name:
       - python3-pip
       - python-is-python3
-      - python3.10-venv
+      # - python3.10-venv
 
 # - name: install postgresql
 #   package:
