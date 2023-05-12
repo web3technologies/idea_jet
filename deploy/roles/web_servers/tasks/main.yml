@@ -65,6 +65,13 @@
 #     settings: "idea_jet.settings.{{ deploy_env }}"
 #     virtualenv: "/applications/idea_jet/venv"
 
+- name: collect static
+  django_manage:
+    command: collectstatic
+    app_path: "/applications/idea_jet/"
+    settings: "idea_jet.settings.{{ deploy_env }}"
+    virtualenv: "/applications/idea_jet/venv"
+
 # - name: install apache
 #   package:
 #     name: 
