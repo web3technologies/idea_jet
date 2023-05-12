@@ -23,8 +23,8 @@ mkdir /applications/ideajet/
 
 echo "BUILDING"
 
-package_name="${environment}_ideajet"
-jenkins_proj_path="/var/lib/jenkins/workspace/$package_name"
+workspace_name="${environment}_ideajet"
+jenkins_proj_path="/var/lib/jenkins/workspace/$workspace_name"
 JENKINS_VENV_DIR=$jenkins_proj_path/venv 
 
 python -m venv $JENKINS_VENV_DIR
@@ -43,7 +43,7 @@ python -m venv /applications/ideajet/venv
 . "/applications/ideajet/venv/bin/activate"
 pip install --upgrade pip
 pip install wheel
-pip install "/var/lib/jenkins/workspace/${package_name}/dist/idea_jet-0.1.0-py3-none-any.whl"
+pip install "/var/lib/jenkins/workspace/${workspace_name}/dist/idea_jet-0.1.0-py3-none-any.whl"
 echo "Application packages installed into Venv"
 
 echo "Gzipping Application"
