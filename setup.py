@@ -130,12 +130,7 @@ setup(
     author_email="zach@web3technologies.io",
     install_requires=install_requires,
     include_package_data=True,
-    packages=[
-        "idea_jet",
-        "idea_jet.idea_jet",
-        "idea_jet.idea_jet_auth",
-        "idea_jet.idea_jet_business"
-    ],
+    packages=find_packages("idea_jet"),
     test_suite="tests",
     tests_require=tests_require,
     extras_require={
