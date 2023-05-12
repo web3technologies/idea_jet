@@ -152,3 +152,27 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    # "filters": {"require_debug_false": {"()": "django.utils.log.RequiredDebugFalse"}},
+    "handlers": {
+        "console":{
+            "class": "logging.StreamHandler"
+        }
+    },
+    #  ... omitting the formatters and handlers for brevity ...
+    'loggers': {
+        # ...  you may have other loggers here as well ...
+        'django': {
+            'handlers': ['console'],
+            'propagate': True,
+        },
+        'idea_jet_business': {
+            'handlers': ['console'],
+            'propagate': True,
+        }
+    }
+}
