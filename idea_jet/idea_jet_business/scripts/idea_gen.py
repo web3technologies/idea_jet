@@ -1,5 +1,8 @@
 from decouple import config
-
+from django.db import transaction
+from django.contrib.auth import get_user_model
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from langchain import PromptTemplate
 from langchain.chains import LLMChain
 from langchain.llms import OpenAI
@@ -7,7 +10,9 @@ from langchain.memory import ConversationBufferMemory
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 import openai
 import random
+import requests
 
+from idea_jet_business.models import BusinessIdea
 from .industry_list import industry_list
 
 
@@ -76,7 +81,46 @@ class BusinessIdeaGeneration:
                     temperature=1, 
                     openai_api_key=OPEN_API_KEY,  
                 )
+        self.user_model = get_user_model()
+        
+    def run(self, user_id):
+        with transaction.atomic():
+            buffer_memory = ConversationBufferMemory()
+            idea_prompt = PromptTemplate(
+                input_variables=["entrepreneurs", "industry"], 
+                template=self.idea_template
+            )
+            random_industry = random.choice(industry_list)
+            print(f"INDUSTRY: {random_industry}")
 
+            business_idea_chain = LLMChain(llm=self.llm, prompt=idea_prompt)
+            business_idea = business_idea_chain.predict(
+                    entrepreneurs=", ".join(["Peter thiel", ", Elon Musk", "Jeff Bezos"]),
+                    industry=random_industry
+            )
+            print(business_idea)
+            print()
+            # ask_questions(business_idea, buffer_memory)
+            # ask_questions_conv(buffer=buffer_memory, idea=business_idea)
+            business_idea_data = self._get_final_idea(buffer_memory=buffer_memory, business_idea=business_idea)
+            logo_url = self._get_logo(business_idea_data.get("business_name"))
+            business_idea_data["logo"] = logo_url
+            logo = self._create_uploadable_image(
+                logo_url, 
+                business_name=business_idea_data["business_name"]
+            )
+            BusinessIdea.objects.create(
+                busines_name=business_idea_data["business_name"],
+                business_idea=business_idea_data["business_idea"],
+                pricing_model=business_idea_data["pricing_model"], 
+                finance_model=business_idea_data["finance_model"], 
+                marketing_strategy=business_idea_data["marketing_strategy"], 
+                white_paper=business_idea_data["white_paper"], 
+                logo=logo,
+                user=self.user_model.objects.get(id=user_id)
+            )
+            return business_idea_data
+        
     def _get_logo(self, business_name):
         print("Creating logo...")
         response = openai.Image.create(
@@ -86,30 +130,12 @@ class BusinessIdeaGeneration:
         )
         image_url = response['data'][0]['url']
         return image_url
-        
-    def run(self):
-        buffer_memory = ConversationBufferMemory()
-        idea_prompt = PromptTemplate(
-            input_variables=["entrepreneurs", "industry"], 
-            template=self.idea_template
-        )
-        random_industry = random.choice(industry_list)
-        print(f"INDUSTRY: {random_industry}")
-
-        business_idea_chain = LLMChain(llm=self.llm, prompt=idea_prompt)
-        business_idea = business_idea_chain.predict(
-                entrepreneurs=", ".join(["Peter thiel", ", Elon Musk", "Jeff Bezos"]),
-                industry=random_industry
-        )
-        print(business_idea)
-        print()
-        # ask_questions(business_idea, buffer_memory)
-        # ask_questions_conv(buffer=buffer_memory, idea=business_idea)
-        business_idea_data = self._get_final_idea(buffer_memory=buffer_memory, business_idea=business_idea)
-        logo_url = self._get_logo(business_idea_data.get("business_name"))
-        business_idea_data["logo"] = logo_url
-        return business_idea_data
-
+    
+    def _create_uploadable_image(self, url, business_name):
+        response = requests.get(url)
+        image_content = ContentFile(response.content)
+        image_path = default_storage.save(f"{business_name}.png", image_content)
+        return image_path
   
     def _get_final_idea(self, buffer_memory, business_idea):
         print("Generating final business idea...")
