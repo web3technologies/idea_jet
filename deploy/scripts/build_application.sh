@@ -31,7 +31,7 @@ python -m venv $JENKINS_VENV_DIR
 echo "VENV created"
 . "${JENKINS_VENV_DIR}/bin/activate"
 pip install --upgrade pip
-pip install -e $jenkins_proj_path .
+pip install $jenkins_proj_path .
 pip install wheel
 python setup.py bdist_wheel 
 deactivate
