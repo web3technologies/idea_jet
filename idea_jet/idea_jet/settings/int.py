@@ -1,4 +1,4 @@
-from idea_jet.settings_keep.settings import *
+from idea_jet.settings.settings import *
 
 DEBUG = False
 
