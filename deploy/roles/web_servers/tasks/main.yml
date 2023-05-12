@@ -15,12 +15,12 @@
     path: "/applications/idea_jet/"
     state: directory
 
-# - name: unarchive project tar
-#   unarchive:
-#     src:  "/tmp/idea_jet.tar"
-#     dest:  "/"
-#     copy: True
-#     list_files: True
+- name: unarchive project tar
+  unarchive:
+    src:  "/tmp/idea_jet.tar"
+    dest:  "/"
+    copy: True
+    list_files: True
 
 - name: copy env variables
   command: cp "/var/lib/jenkins/envs/idea_jet_{{ deploy_env }}/.env" /applications/idea_jet/.env
