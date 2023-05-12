@@ -53,6 +53,11 @@
 #   become: true
 #   become_user: postgres
 
+- name: Make manage.py executable
+  file:
+    path: /applications/idea_jet/manage.py
+    mode: 0777
+
 - name: migrate
   django_manage:
     command: migrate
