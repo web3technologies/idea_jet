@@ -30,62 +30,67 @@
     name:
       - python3-pip
       - python-is-python3
-      # - python3.10-venv
+      - python3.10-venv
 
-# - name: install postgresql
-#   package:
-#     name: 
-#       - postgresql
-#       - postgresql-contrib
-#       - libpq-dev
-#       - python3-psycopg2
-#       - acl
+- name: install postgresql
+  package:
+    name: 
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
+      - python3-psycopg2
+      - acl
 
-# - name: create database
-#   postgresql_db:
-#     name:  "idea_jet"
-#   become: true
-#   become_user: postgres
+- name: create database
+  postgresql_db:
+    name:  "idea_jet"
+  become: true
+  become_user: postgres
 
-# - name: create postgresql user
-#   postgresql_user:
-#     name:  "idea_jet"
-#     password: "db_password"
-#     db:  "idea_jet"
-#     expires: infinity
-#   become: true
-#   become_user: postgres
+- name: create postgresql user
+  postgresql_user:
+    name:  "idea_jet"
+    password: "db_password"
+    db:  "idea_jet"
+    expires: infinity
+  become: true
+  become_user: postgres
 
-# - name: migrate
-#   django_manage:
-#     command: migrate
-#     app_path: "/idea_jet/src/"
-#     settings: "pa_backend.settings.{{ deploy_env }}"
-#     virtualenv: "applications/idea_jet/venv"
+- name: migrate
+  django_manage:
+    command: migrate
+    app_path: "/applications/idea_jet/"
+    settings: "idea_jet.settings.{{ deploy_env }}"
+    virtualenv: "applications/idea_jet/venv"
 
-# - name: Install and ensure nginx is at the latest version
-#   apt:
-#     name: nginx
-#     state: latest
-# - name: start nginx
-#   service: 
-#     name: nginx
-#     state: started
-#     enabled: yes  # if you want to also enable nginx
+- name: install apache
+  package:
+    name: 
+      - apache2
+      - libapache2-mod-wsgi-py3
+    state: latest
 
-# - name: copy nginx site file file
-#   copy:
-#     src: "{{ nginx_site_filename }}"
-#     dest: "/ /etc/nginx/sites-available/{{ nginx_config_filename }}"
-#     owner: root
-#     group: root
-#     mode: 0644
+- name: copy apache config file
+  tags: apache,apache3,httpd
+  copy:
+    src: "{{ apache_config_filename }}"
+    dest: "/etc/apache2/sites-available/{{ apache_config_filename }}"
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart_apache
 
-# - name: Activate site
-#   shell: "ln -s /etc/nginx/sites-available/{{ nginx_config_filename }} /etc/nginx/sites-enabled/"
+- name: Activate site
+  shell: "/usr/sbin/a2ensite {{ apache_config_filename }}"
+  notify: Reload Apache
 
-# - name: restart nginx
-#   service: name=nginx state=restarted
+- name: start and enable apache service (Ubuntu)
+  tags: apache,httpd
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  when: ansible_distribution == "Ubuntu"
 
 # - name: copy rabbitmq install script
 #   copy:

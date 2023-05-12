@@ -1,16 +1,12 @@
-"""
-WSGI config for idea_jet project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
-"""
-
+from decouple import config
 import os
+
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'idea_jet.settings')
+os.environ.setdefault(
+        'DJANGO_SETTINGS_MODULE', 
+        f'idea_jet.settings.{config("DJANGO_SETTINGS_ENV")}'
+    )
 
 application = get_wsgi_application()
