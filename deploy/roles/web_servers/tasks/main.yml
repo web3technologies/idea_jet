@@ -1,29 +1,26 @@
-# - name: update repository index (Ubuntu)
-#   tags: always
-#   apt:
-#     update_cache: yes
-#     changed_when: false
-#     when: ansible_distribution == "Ubuntu"
+- name: update repository index (Ubuntu)
+  tags: always
+  apt:
+    update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
 
-# - name: remove current project dir
-#   file:
-#     path: "/applications/idea_jet/"
-#     state: absent
+- name: remove current project dir
+  file:
+    path: "/applications/idea_jet/"
+    state: absent
 
-# - name: make project dir
-#   file:
-#     path: "/applications/idea_jet/"
-#     state: directory
+- name: make project dir
+  file:
+    path: "/applications/idea_jet/"
+    state: directory
 
-# - name: unarchive project tar
-#   unarchive:
-#     src:  "/tmp/idea_jet.tar"
-#     dest:  "/"
-#     copy: True
-#     list_files: True
-
-- name: copy env variables
-  command: cp "/var/lib/jenkins/envs/idea_jet_{{ deploy_env }}/.env" /applications/idea_jet/.env
+- name: unarchive project tar
+  unarchive:
+    src:  "/tmp/idea_jet.tar"
+    dest:  "/"
+    copy: True
+    list_files: True
 
 - name: install python3 and pip3
   package:
