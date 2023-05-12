@@ -18,7 +18,7 @@
 - name: unarchive project tar
   unarchive:
     src:  "/tmp/ideajet.tar"
-    dest:  ""
+    dest:  "/"
     copy: True
     list_files: True
 
