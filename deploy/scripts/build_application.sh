@@ -23,7 +23,7 @@ mkdir /applications/idea_jet/
 
 echo "BUILDING"
 
-workspace_name="${environment}_idea_jet"
+workspace_name="idea_jet_${environment}"
 jenkins_proj_path="/var/lib/jenkins/workspace/$workspace_name"
 JENKINS_VENV_DIR=$jenkins_proj_path/venv 
 
