@@ -1,25 +1,3 @@
- - hosts: all
-   become: true
-  #  vars:
-  #   ansible_become_pass: !vault |
-  #         $ANSIBLE_VAULT;1.1;AES256
-  #         36646438663465366530633538396531633837666164303163306564633730633662326635613631
-  #         3931356338663862626130323662323333623331623330370a623439663834653939383565396161
-  #         62386332323633623561306264643263343039623432636431653166386365333862616336333936
-  #         3437386432663263350a343632366533376336306463613935313866636462373261313733626361
-  #         3335
-
-   pre_tasks:
-
-   - name: update repository index (Ubuntu)
-     tags: always
-     apt:
-       update_cache: yes
-     changed_when: false
-     when: ansible_distribution == "Ubuntu"
-
- 
-
  - hosts: web_servers
    become: true
   #  vars:

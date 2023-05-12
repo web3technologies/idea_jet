@@ -1,3 +1,10 @@
+- name: update repository index (Ubuntu)
+  tags: always
+  apt:
+    update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "Ubuntu"
+
 - name: remove current project dir
   file:
     path: "/applications/ideajet/"
