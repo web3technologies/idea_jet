@@ -7,23 +7,23 @@
 
 - name: remove current project dir
   file:
-    path: "/applications/ideajet/"
+    path: "/applications/idea_jet/"
     state: absent
 
 - name: make project dir
   file:
-    path: "/applications/ideajet/"
+    path: "/applications/idea_jet/"
     state: directory
 
 - name: unarchive project tar
   unarchive:
-    src:  "/tmp/ideajet.tar"
+    src:  "/tmp/idea_jet.tar"
     dest:  "/"
     copy: True
     list_files: True
 
 - name: copy env variables
-  command: cp /envs/ideajet/.env /applications/ideajet/.env
+  command: cp /envs/idea_jet/.env /applications/idea_jet/.env
 
 - name: install python3 and pip3
   package:
@@ -43,15 +43,15 @@
 
 # - name: create database
 #   postgresql_db:
-#     name:  "ideajet"
+#     name:  "idea_jet"
 #   become: true
 #   become_user: postgres
 
 # - name: create postgresql user
 #   postgresql_user:
-#     name:  "ideajet"
+#     name:  "idea_jet"
 #     password: "db_password"
-#     db:  "ideajet"
+#     db:  "idea_jet"
 #     expires: infinity
 #   become: true
 #   become_user: postgres
@@ -59,9 +59,9 @@
 # - name: migrate
 #   django_manage:
 #     command: migrate
-#     app_path: "/ideajet/src/"
+#     app_path: "/idea_jet/src/"
 #     settings: "pa_backend.settings.{{ deploy_env }}"
-#     virtualenv: "applications/ideajet/venv"
+#     virtualenv: "applications/idea_jet/venv"
 
 # - name: Install and ensure nginx is at the latest version
 #   apt:
@@ -89,7 +89,7 @@
 
 # - name: copy rabbitmq install script
 #   copy:
-#     src: "/var/lib/jenkins/workspace/ideajet/deploy/scripts/installrabbitmq.sh"
+#     src: "/var/lib/jenkins/workspace/idea_jet/deploy/scripts/installrabbitmq.sh"
 #     dest: "/tmp/installrabbitmq.sh"
 #     mode: 0777
 
