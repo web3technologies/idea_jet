@@ -106,8 +106,8 @@ class BusinessIdeaGeneration:
         # ask_questions(business_idea, buffer_memory)
         # ask_questions_conv(buffer=buffer_memory, idea=business_idea)
         business_idea_data = self._get_final_idea(buffer_memory=buffer_memory, business_idea=business_idea)
-        # logo_url = self._get_logo(business_idea_data.get("business_name"))
-        # business_idea_data["logo"] = logo_url
+        logo_url = self._get_logo(business_idea_data.get("business_name"))
+        business_idea_data["logo"] = logo_url
         return business_idea_data
 
   
