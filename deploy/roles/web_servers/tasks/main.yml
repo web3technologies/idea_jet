@@ -23,7 +23,7 @@
     list_files: True
 
 - name: copy env variables
-  command: cp /envs/idea_jet/.env /applications/idea_jet/.env
+  command: cp ~/envs/idea_jet_int/.env /applications/idea_jet/.env
 
 - name: install python3 and pip3
   package:
