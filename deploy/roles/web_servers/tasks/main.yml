@@ -18,12 +18,12 @@
 - name: unarchive project tar
   unarchive:
     src:  "/tmp/ideajet.tar"
-    dest:  "/applications/ideajet/"
+    dest:  ""
     copy: True
     list_files: True
 
 - name: copy env variables
-  command: cp /etc/ideajet/.env "/ideajet/.env"
+  command: cp /envs/ideajet/.env /applications/ideajet/.env
 
 - name: install python3 and pip3
   package:
