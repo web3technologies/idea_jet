@@ -110,7 +110,7 @@ class BusinessIdeaGeneration:
                 business_name=business_idea_data["business_name"]
             )
             BusinessIdea.objects.create(
-                busines_name=business_idea_data["business_name"],
+                business_name=business_idea_data["business_name"],
                 business_idea=business_idea_data["business_idea"],
                 pricing_model=business_idea_data["pricing_model"], 
                 finance_model=business_idea_data["finance_model"], 

@@ -24,7 +24,7 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return super().get_queryset(user_id=self.request.user.id)
+        return super().get_queryset().filter(user=self.request.user)
     
     # todo make sure only user requesting has access to their business ideas
     def get_object(self):
