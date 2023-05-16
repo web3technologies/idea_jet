@@ -14,7 +14,10 @@ class BusinessIdeaView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, *args, **kwargs):
-        business_idea = BusinessIdeaGeneration().run(user_id=self.request.user.id)
+        business_idea = BusinessIdeaGeneration().run(
+            user_id=self.request.user.id,
+            **self.request.data
+            )
         return Response(data=business_idea, status=status.HTTP_201_CREATED)
 
 

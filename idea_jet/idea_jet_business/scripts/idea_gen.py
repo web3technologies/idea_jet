@@ -18,25 +18,56 @@ from .industry_list import industry_list
 
 OPEN_API_KEY = config("OPEN_API_KEY")
 
-
+### notes
+### possibly accept a budget. How much do you want to invest? Put this in the input.
+### allow user to select how creative
 
 class BusinessIdeaGeneration:
-    
+
     idea_template = """
             You are a very successful entrepreneur. 
-            Examples: {entrepreneurs} 
+            Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
             You think like them.
             You have created many multi million dollar revenue businesses in the past.
             You have also raised millions of dollars in funding and have exited with multi million dollar exits.
 
+            I have a business idea and I need your help to capitalize on this. Your expert skills are very vaulable to me.
+
             Your goal is to:
-            - Generate a unique business idea in this industry: {industry}
+            - Extrapolate on my business idea: {idea}
             - Generate a name for this business
 
             YOUR RESPONSE:
 
         """
     
+    industry_template = """
+        You are a very successful entrepreneur. 
+        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
+        You think like them.
+        You have created many multi million dollar revenue businesses in the past.
+        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
+
+        Your goal is to:
+        - Generate a unique business idea in this industry: {industry}
+        - Generate a name for this business
+
+        YOUR RESPONSE:
+    """
+    
+    random_template = """
+        You are a very successful entrepreneur. 
+        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
+        You think like them.
+        You have created many multi million dollar revenue businesses in the past.
+        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
+    
+        Your goal is to:
+        - Generate a unique business idea
+        - Generate a name for this business
+    """
+    
+    # - Formulate a competetive advantage -- use agents to search the internet for similar ideas
     final_output_template = """
             After re reading the business idea and looking through the memory of this idea generation I want you to create a business:
 
@@ -83,23 +114,32 @@ class BusinessIdeaGeneration:
                 )
         self.user_model = get_user_model()
         
-    def run(self, user_id):
+    def run(self, user_id, idea=None, industry=None):
+
         with transaction.atomic():
             buffer_memory = ConversationBufferMemory()
-            idea_prompt = PromptTemplate(
-                input_variables=["entrepreneurs", "industry"], 
-                template=self.idea_template
-            )
-            random_industry = random.choice(industry_list)
-            print(f"INDUSTRY: {random_industry}")
+            if idea:
+                template = self.idea_template
+                input_vars = ["idea"]
+                prediction_kwargs = {"idea": idea}
+            elif industry:
+                template = self.industry_template
+                input_vars = ["industry"]
+                random_industry = random.choice(industry_list)
+                prediction_kwargs = {"industry":random_industry}
+            else:
+                template = self.random_template
+                prediction_kwargs = {}
+                input_vars = []
 
-            business_idea_chain = LLMChain(llm=self.llm, prompt=idea_prompt)
-            business_idea = business_idea_chain.predict(
-                    entrepreneurs=", ".join(["Peter thiel", ", Elon Musk", "Jeff Bezos"]),
-                    industry=random_industry
+            idea_prompt = PromptTemplate(
+                input_variables=input_vars, 
+                template=template
             )
-            print(business_idea)
-            print()
+            
+            business_idea_chain = LLMChain(llm=self.llm, prompt=idea_prompt)
+            business_idea = business_idea_chain.predict(**prediction_kwargs)
+
             # ask_questions(business_idea, buffer_memory)
             # ask_questions_conv(buffer=buffer_memory, idea=business_idea)
             business_idea_data = self._get_final_idea(buffer_memory=buffer_memory, business_idea=business_idea)
@@ -122,7 +162,6 @@ class BusinessIdeaGeneration:
             return business_idea_data
         
     def _get_logo(self, business_name):
-        print("Creating logo...")
         response = openai.Image.create(
             prompt=f"Create a simple animated logo for the business name {business_name}",
             n=1,
