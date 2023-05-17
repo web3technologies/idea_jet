@@ -54,6 +54,22 @@ class BusinessIdeaGeneration:
 
         YOUR RESPONSE:
     """
+
+    industry_and_model_template = """
+        You are a very successful entrepreneur. 
+        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
+        You think like them.
+        You have created many multi million dollar revenue businesses in the past.
+        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
+
+        Your goal is to:
+        - Generate a unique business idea in this industry: {industry}
+        - Use this business model {business_model}
+        - Generate a name for this business
+
+        YOUR RESPONSE:
+    
+    """
     
     random_template = """
         You are a very successful entrepreneur. 
@@ -114,7 +130,7 @@ class BusinessIdeaGeneration:
                 )
         self.user_model = get_user_model()
         
-    def run(self, user_id, idea=None, industry=None):
+    def run(self, user_id, idea=None, industry=None, business_model=None):
 
         with transaction.atomic():
             buffer_memory = ConversationBufferMemory()
@@ -123,10 +139,14 @@ class BusinessIdeaGeneration:
                 input_vars = ["idea"]
                 prediction_kwargs = {"idea": idea}
             elif industry:
-                template = self.industry_template
-                input_vars = ["industry"]
-                random_industry = random.choice(industry_list)
-                prediction_kwargs = {"industry":random_industry}
+                if business_model:
+                    template = self.industry_and_model_template
+                    input_vars = ["industry", "business_model"]
+                    prediction_kwargs = {"industry": industry, "business_model": business_model}
+                else:
+                    template = self.industry_template
+                    input_vars = ["industry"]
+                    prediction_kwargs = {"industry":industry}
             else:
                 template = self.random_template
                 prediction_kwargs = {}
