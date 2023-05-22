@@ -6,7 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.4/dist/tailwind.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
 </head>
-<body class="font-roboto bg-white text-gray-500 flex">
+<body class="font-roboto bg-white text-gray-500 flex flex-col">
   <header>
     <!-- Desktop Header -->
     <div class="w-full fixed flex justify-center">
@@ -50,7 +50,80 @@
         </div>
     </div>
   </header>
-  
+  <!-- Hero Section -->
+    <section class="w-full bg-white py-12 mt-24">
+        <div class="w-11/12 sm:w-10/12 md:w-5/6 lg:w-4/5 xl:w-4/5 mx-auto flex flex-col lg:flex-row items-center">
+            <!-- Text Section -->
+            <div class="lg:w-1/2 mb-10 lg:mb-0 pr-0 lg:pr-12">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
+                    <span class="text-custom-color">Generate your next Business with</span>
+                    <span class="text-blue-500">IdeaJet</span>
+                </h2>
+                <p class="text-base sm:text-lg md:text-xl text-gray-500 mb-6">
+                    Using AI generate a unique business idea, logo, and execution plan.
+                </p>
+                <a href="#"
+                    class="inline-block bg-blue-500 text-white hover:bg-blue-600 py-3 px-6 rounded-full">
+                    Start generating for free
+                </a>
+            </div>
+
+            <!-- Image Section -->
+            <div class="lg:w-1/2 flex items-center">
+                <img src="./pj2.jpg" alt="Hero Image" class="mx-auto w-3/4 md:w-full h-64 md:h-auto object-cover rounded-lg shadow-lg">
+            </div>
+        </div>
+    </section>
+    <!-- Features Section -->
+    <section class="w-full bg-gray-100 py-12 mt-24">
+        <div class="w-11/12 sm:w-10/12 md:w-5/6 lg:w-4/5 xl:w-4/5 mx-auto flex flex-col-reverse md:flex-row items-center">
+
+            <!-- Image Section -->
+            <div class="md:w-1/2 flex items-center md:mr-12">
+                <img src="./merged.gif" alt="Feature Image" class="mx-auto w-3/4 md:w-full h-64 md:h-auto object-cover rounded-lg shadow-lg">
+            </div>
+
+            <!-- Text Section -->
+            <div class="md:w-1/2 mb-10 md:mb-0 pr-0 md:pr-12">
+                <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-blue-500 font-bold mb-6">
+                    Generate a unique business
+                </h2>
+                <p class="text-base sm:text-lg md:text-xl text-gray-500 mb-6">
+                    This is where your paragraph text will go. You can use this space to explain a little more about the feature and how it can benefit the user.
+                </p>
+                <hr class="border-gray-300 border-t mb-6">
+                <ul class="text-gray-500 space-y-2">
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-blue-500 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Example Bullet 1
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-blue-500 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Example Bullet 2
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-blue-500 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Example Bullet 3
+                    </li>
+                    <li class="flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="h-6 w-6 text-blue-500 mr-2">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                        Example Bullet 4
+                    </li>
+                </ul>
+                
+            </div>
+        </div>
+    </section>
+
+
   <script>
     const sidebar = document.getElementById('sidebar');
     const menuBtn = document.getElementById('menuBtn');
