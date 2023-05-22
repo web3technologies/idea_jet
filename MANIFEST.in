@@ -1,2 +1,2 @@
-recursive-include idea_jet_static/*
-recursive-include idea_jet_business/templates/*
+recursive-include idea_jet/idea_jet_static/*
+recursive-include idea_jet/idea_jet_business/templates/*
