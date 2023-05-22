@@ -76,7 +76,8 @@ TEMPLATES = [
 
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
+    os.path.join(BASE_DIR, "idea_jet_static"),
+    os.path.join(BASE_DIR, "idea_jet_business/templates")
 ]
 STATIC_ROOT = f"/applications/idea_jet/static/"   #collectstatic places all files found here in prod
 TEMPLATES[0]['DIRS'] = [STATIC_ROOT]

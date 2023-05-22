@@ -131,6 +131,11 @@ setup(
     install_requires=install_requires,
     include_package_data=True,
     packages=find_packages("idea_jet"),
+    package_data={
+        'idea_jet_business': ['templates/*'],
+        'idea_jet_static': ["/*"]
+    },
+    include_package_data=True,
     test_suite="tests",
     tests_require=tests_require,
     extras_require={
