@@ -132,8 +132,8 @@ setup(
     include_package_data=True,
     packages=find_packages("idea_jet"),
     package_data={
-        'idea_jet_business': ['templates/*'],
-        'idea_jet_static': ["/*"]
+        'idea_jet_business': ['*'],
+        'idea_jet_static': ["*"]
     },
     include_package_data=True,
     test_suite="tests",
