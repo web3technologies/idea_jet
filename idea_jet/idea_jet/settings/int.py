@@ -8,3 +8,4 @@ CORS_ORIGIN_WHITELIST = [
 ]
 
 MEDIA_ROOT = "/applications/idea_jet_media/"
+STATIC_ROOT = f"/applications/idea_jet/static/"   #collectstatic places all files found here in prod

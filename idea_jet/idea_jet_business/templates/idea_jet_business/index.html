@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +74,7 @@
 
             <!-- Image Section -->
             <div class="lg:w-1/2 flex items-center">
-                <img src="./pj.jfif" alt="Hero Image" class="mx-auto w-full md:w-3/4 h-64 md:h-auto object-cover rounded-lg shadow-lg">
+                <img src="{% static 'hero/pg_edited.jpg' %}" alt="Hero Image" class="mx-auto w-full md:w-3/4 h-64 md:h-auto object-cover rounded-lg shadow-lg">
             </div>
         </div>
     </section>
@@ -82,7 +84,7 @@
 
             <!-- Image Section -->
             <div class="md:w-1/2 flex items-center md:mr-12">
-                <img src="./merged.gif" alt="Feature Image" class="mx-auto w-3/4 md:w-full h-64 md:h-auto object-cover rounded-lg shadow-lg">
+                <img src="{% static 'hero/merged.gif' %}" alt="Feature Image" class="mx-auto w-3/4 md:w-full h-64 md:h-auto object-cover rounded-lg shadow-lg">
             </div>
 
             <!-- Text Section -->
@@ -135,7 +137,7 @@
             <div class="flex flex-wrap justify-center gap-6">
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/Hyperspace Solutions.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/Hyperspace Solutions.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -152,7 +154,7 @@
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/Green Realty Solutions.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/Green Realty Solutions.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -169,7 +171,7 @@
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/LifeZen.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/LifeZen.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -186,7 +188,7 @@
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/RevelNation.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/RevelNation.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -203,7 +205,7 @@
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/PharmHelp.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/PharmHelp.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -220,7 +222,7 @@
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
                     <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                        <img src="./examples_businesses/Nimble Talk.png" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
+                        <img src="{% static 'examples_businesses/Nimble Talk.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
                             <div class="hidden content">
@@ -250,8 +252,9 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <!-- Free -->
             <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                <div class="h-4 rounded-t-lg bg-blue-500"></div>
                 <div class="p-6">
-                <h3 class="text-lg font-bold text-blue-500 mb-2">Free</h3>
+                <h3 class="text-lg font-bold text-blue-500 mb-2">Experimenter</h3>
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">$0</h2>
                 <ul class="list-disc list-inside text-gray-500">
                     <li>Feature 1</li>
@@ -263,6 +266,7 @@
         
             <!-- Solo Founder -->
             <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                <div class="h-4 rounded-t-lg bg-green-500"></div>
                 <div class="p-6">
                 <h3 class="text-lg font-bold text-blue-500 mb-2">Solo Founder</h3>
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">$9</h2>
@@ -277,6 +281,7 @@
         
             <!-- Startup -->
             <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                <div class="h-4 rounded-t-lg bg-purple-500"></div>
                 <div class="p-6">
                 <h3 class="text-lg font-bold text-blue-500 mb-2">Startup</h3>
                 <h2 class="text-3xl font-bold text-gray-900 mb-4">$29</h2>
@@ -292,7 +297,7 @@
         
             <!-- Enterprise -->
             <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
-                <div class="h-12" style="background: rgb(145, 80, 244);"></div>
+                <div class="h-4 rounded-t-lg bg-yellow-500"></div>
                 <div class="p-6">
                     <h3 class="text-lg font-bold text-blue-500 mb-2">Enterprise</h3>
                     <h2 class="text-3xl font-bold text-gray-900 mb-4">Contact us</h2>
@@ -309,6 +314,7 @@
             </div>
         </div>
         </section>
+    
     
     <!-- FAQ SECTION -->
     <section class="faq py-12 bg-white mt-24" id="faq">

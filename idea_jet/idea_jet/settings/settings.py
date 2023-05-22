@@ -74,11 +74,11 @@ TEMPLATES = [
     },
 ]
 
-STATIC_ROOT = f"/applications/idea_jet/static/"   #collectstatic places all files found here in prod
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "idea_jet_business", "static")
-]
 
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static")
+]
+STATIC_ROOT = f"/applications/idea_jet/static/"   #collectstatic places all files found here in prod
 TEMPLATES[0]['DIRS'] = [STATIC_ROOT]
 
 WSGI_APPLICATION = 'idea_jet.wsgi.application'
