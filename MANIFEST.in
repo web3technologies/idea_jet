@@ -1,0 +1,3 @@
+recursive-include idea_jet_static/examples_businesses *
+recursive-include idea_jet_static/hero *
+recursive-include idea_jet_business/templates/ *
