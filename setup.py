@@ -129,7 +129,6 @@ setup(
     author="Web3Technologies LLC",
     author_email="zach@web3technologies.io",
     install_requires=install_requires,
-    include_package_data=True,
     packages=find_packages("idea_jet"),
     include_package_data=True,
     test_suite="tests",
