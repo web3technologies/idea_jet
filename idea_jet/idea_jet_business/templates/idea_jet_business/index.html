@@ -24,7 +24,7 @@
                 <a href="#pricing" class="mx-2 text-gray-500 hover:text-blue-500">Pricing</a>
                 <a href="#faq" class="mx-2 text-gray-500 hover:text-blue-500">FAQ</a>
                 <a href="#contact" class="mx-2 text-gray-500 hover:text-blue-500">Contact</a>
-                <a href="https://int.app.ideajet.ai" class="mx-2 bg-blue-500 text-white hover:bg-blue-600 px-5 py-1 rounded">App</a>
+                <a href="{{ app_url }}" class="mx-2 bg-blue-500 text-white hover:bg-blue-600 px-5 py-1 rounded">App</a>
             </div>
         </div>
         </div>
@@ -50,15 +50,15 @@
             <a href="#pricing" class="block py-2 text-gray-500 hover:text-blue-500 border-b border-gray-200">Pricing</a>
             <a href="#faq" class="block py-2 text-gray-500 hover:text-blue-500 border-b border-gray-200">FAQ</a>
             <a href="#contact" class="block py-2 text-gray-500 hover:text-blue-500 border-b border-gray-200">Contact</a>
-            <a href="app-link" class="block py-2 bg-blue-500 text-white hover:bg-blue-600 px-3 rounded text-center">App</a>
+            <a href="{{ app_url }}" class="block py-2 bg-blue-500 text-white hover:bg-blue-600 px-3 rounded text-center">App</a>
         </div>
     </div>
   </header>
   <!-- Hero Section -->
-    <section class="w-full bg-white py-12 mt-24" id="home">
+    <section class="w-full bg-white py-12 mt-12 sm:mt-24 " id="home">
         <div class="w-11/12 sm:w-10/12 md:w-5/6 lg:w-4/5 xl:w-4/5 mx-auto flex flex-col lg:flex-row items-center">
             <!-- Text Section -->
-            <div class="lg:w-1/2 mb-10 lg:mb-0 pr-0 lg:pr-12">
+            <div class="lg:w-1/2 mb-10 lg:mb-0 pr-0 lg:pr-12 text-center sm:text-left">
                 <h2 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
                     <span class="text-custom-color">Generate your next Business with</span>
                     <span class="text-blue-500">IdeaJet</span>
@@ -66,7 +66,7 @@
                 <p class="text-base sm:text-lg md:text-xl text-gray-500 mb-6">
                     Using AI generate a unique business idea, logo, and execution plan.
                 </p>
-                <a href="#"
+                <a href="{{ app_url }}"
                     class="inline-block bg-blue-500 text-white hover:bg-blue-600 py-3 px-6 rounded-full">
                     Start generating for free
                 </a>
@@ -136,7 +136,7 @@
             <!-- Card Grid -->
             <div class="flex flex-wrap justify-center gap-6">
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/Hyperspace Solutions.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -153,7 +153,7 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/Green Realty Solutions.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -170,7 +170,7 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/LifeZen.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -187,7 +187,7 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/RevelNation.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -204,7 +204,7 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/PharmHelp.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -221,7 +221,7 @@
                     </div>
                 </div>
                 <div class="w-full sm:w-1/2 lg:w-1/4 mb-6 lg:mb-0">
-                    <div class="bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
+                    <div class="card bg-white border-gray-200 rounded-lg shadow-lg transform transition duration-500 ease-in-out hover:scale-105 cursor-pointer">
                         <img src="{% static 'examples_businesses/Nimble Talk.png' %}" alt="Example Image" class="w-full object-cover rounded-t-lg" style="height: 150px;">
                         <div class="p-4">
                             <h3 class="text-lg font-bold text-blue-500 mb-2">Business Name</h3>
@@ -241,6 +241,7 @@
         </div>
           
     </section>
+    <!-- Pricing Section -->
     <section class="pricing py-12 bg-gray-100" id="pricing">
         <div class="container mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center pb-10">
@@ -329,21 +330,21 @@
             <div class="divide-y divide-gray-200">
             <div class="py-4">
                 <button class="w-full text-left text-lg font-semibold flex justify-between items-center">
-                <span>Question 1</span>
+                <span>Who owns my business idea? Can you steal this idea?</span>
                 <span class="icon-arrow">🔽</span>
                 </button>
                 <div class="answer hidden mt-2 text-gray-500">
-                This is the answer to question 1.
+                    No you own full rights to your business idea. Described in the intelectual property section of our terms and conditions, all Intelectual Property generated by a paying user is their property.
                 </div>
             </div>
         
             <div class="py-4">
                 <button class="w-full text-left text-lg font-semibold flex justify-between items-center">
-                <span>Question 2</span>
+                <span>What if I want to share this idea with a friend?</span>
                 <span class="icon-arrow">🔽</span>
                 </button>
                 <div class="answer hidden mt-2 text-gray-500">
-                This is the answer to question 2.
+                You can! You can add a user to view and see the business idea so you can both collaborate together.
                 </div>
             </div>
         
@@ -426,7 +427,7 @@
     });
   });
 
-  document.querySelectorAll('.card').forEach(card => {
+    document.querySelectorAll('.card').forEach(card => {
         card.querySelector('button').addEventListener('click', () => {
             card.querySelector('.content').classList.toggle('hidden');
             card.querySelector('button').textContent = card.querySelector('.content').classList.contains('hidden') ? 'Expand' : 'Collapse';

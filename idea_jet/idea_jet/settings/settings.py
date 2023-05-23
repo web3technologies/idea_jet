@@ -22,8 +22,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+APP_URL = 'http://localhost:3000'
+
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    APP_URL
 ]
 
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")

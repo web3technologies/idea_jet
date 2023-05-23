@@ -2,9 +2,11 @@ from idea_jet.settings.settings import *
 
 DEBUG = False
 
+APP_URL = "https://int.app.ideajet.ai"
+
 CORS_ORIGIN_WHITELIST = [
     "https://idea-jet-web.vercel.app",
-    "https://int.app.ideajet.ai"
+    APP_URL
 ]
 
 MEDIA_ROOT = "/applications/idea_jet_media/"
