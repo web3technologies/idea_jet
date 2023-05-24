@@ -16,7 +16,8 @@ class BusinessIdeaView(APIView):
     def post(self, *args, **kwargs):
         business_idea_data = BusinessIdeaGenerationV2().run(
             user_id=self.request.user.id,
-            **self.request.data
+            action=self.request.data.get("action"),
+            data=self.request.data.get("data")
             )
         return Response(data=business_idea_data, status=status.HTTP_201_CREATED)
 
