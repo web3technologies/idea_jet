@@ -6,4 +6,4 @@ class FeatureSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Feature
-        fields = "__all___"
+        fields = "__all__"

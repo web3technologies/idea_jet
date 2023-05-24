@@ -5,7 +5,6 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 
 from idea_jet_business.models import BusinessIdea
-from idea_jet_business.scripts.idea_gen import BusinessIdeaGeneration
 from idea_jet_business.scripts.idea_gen2 import BusinessIdeaGenerationV2
 from idea_jet_business.serializers import BusinessIdeaSerializer
 

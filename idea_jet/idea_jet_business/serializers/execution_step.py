@@ -6,4 +6,4 @@ class ExecutionStepSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ExecutionStep
-        fields = "__all___"
+        fields = "__all__"

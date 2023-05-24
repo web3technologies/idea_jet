@@ -10,7 +10,7 @@ class BusinessIdea(models.Model):
     date_generated = models.DateTimeField(auto_now_add=True)
 
     business_model = models.ForeignKey(BusinessModelType, on_delete=models.DO_NOTHING, default=None, null=True)
-    industy_type = models.ForeignKey(IndustryType, on_delete=models.DO_NOTHING, default=None, null=True)
+    industry_type = models.ForeignKey(IndustryType, on_delete=models.DO_NOTHING, default=None, null=True)
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 
