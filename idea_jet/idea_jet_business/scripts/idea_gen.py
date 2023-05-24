@@ -13,8 +13,8 @@ import random
 import requests
 
 from idea_jet_business.models import BusinessIdea
-from .industry_list import industry_list
 
+from idea_jet_business.prompt_templates.business import *
 
 OPEN_API_KEY = config("OPEN_API_KEY")
 
@@ -24,104 +24,6 @@ OPEN_API_KEY = config("OPEN_API_KEY")
 
 class BusinessIdeaGeneration:
 
-    idea_template = """
-            You are a very successful entrepreneur. 
-            Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
-            You think like them.
-            You have created many multi million dollar revenue businesses in the past.
-            You have also raised millions of dollars in funding and have exited with multi million dollar exits.
-
-            I have a business idea and I need your help to capitalize on this. Your expert skills are very vaulable to me.
-
-            Your goal is to:
-            - Extrapolate on my business idea: {idea}
-            - Generate a name for this business
-
-            YOUR RESPONSE:
-
-        """
-    
-    industry_template = """
-        You are a very successful entrepreneur. 
-        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
-        You think like them.
-        You have created many multi million dollar revenue businesses in the past.
-        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
-
-        Your goal is to:
-        - Generate a unique business idea in this industry: {industry}
-        - Generate a name for this business
-
-        YOUR RESPONSE:
-    """
-
-    industry_and_model_template = """
-        You are a very successful entrepreneur. 
-        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
-        You think like them.
-        You have created many multi million dollar revenue businesses in the past.
-        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
-
-        Your goal is to:
-        - Generate a unique business idea in this industry: {industry}
-        - Use this business model {business_model}
-        - Generate a name for this business
-
-        YOUR RESPONSE:
-    
-    """
-    
-    random_template = """
-        You are a very successful entrepreneur. 
-        Examples: "Peter thiel", "Elon Musk", "Jeff Bezos"
-        You think like them.
-        You have created many multi million dollar revenue businesses in the past.
-        You have also raised millions of dollars in funding and have exited with multi million dollar exits.
-    
-        Your goal is to:
-        - Generate a unique business idea
-        - Generate a name for this business
-    """
-    
-    # - Formulate a competetive advantage -- use agents to search the internet for similar ideas
-    final_output_template = """
-            After re reading the business idea and looking through the memory of this idea generation I want you to create a business:
-
-            {bus_idea}
-
-            - Return the business name
-            - Return the business idea
-            - Generate a pricing model
-            - Generate a finance model
-            - Generate a marketing strategy
-            - Create a simple white paper in less than 200 characters
-            
-            {format_instructions}
-
-            YOUR RESPONSE:
-        """
-    
-    question_template = """
-            Ask a unique question about the business idea: \n
-            
-            Idea: {idea}
-
-            that can be used to improve your own understanding and the effectiveness of the business.
-            Look in the conversation history and ensure you have not already asked this question.
-
-            I want you to ask questions that can help any of these subjects:
-                - Help improve customer retention
-                - Generate the best marketing strategy
-                - Deploy a successful marketing strategy
-                - Secure financing from Ventur Capital firms
-            
-            After asking the question I want you to answer it with the best of your abilities. 
-            Remember you are a very successful entrepreneur. You have created many successful businesses in the past.
-
-            YOUR RESPONSE:
-
-        """
-
     def __init__(self) -> None:
         openai.api_key = OPEN_API_KEY
         self.llm = OpenAI(
@@ -130,25 +32,25 @@ class BusinessIdeaGeneration:
                 )
         self.user_model = get_user_model()
         
-    def run(self, user_id, idea=None, industry=None, business_model=None):
+    def run(self, user_id, idea=None, industry=None, business_model=None, **kwargs):
 
         with transaction.atomic():
             buffer_memory = ConversationBufferMemory()
             if idea:
-                template = self.idea_template
+                template = idea_template
                 input_vars = ["idea"]
                 prediction_kwargs = {"idea": idea}
             elif industry:
                 if business_model:
-                    template = self.industry_and_model_template
+                    template = industry_and_model_template
                     input_vars = ["industry", "business_model"]
                     prediction_kwargs = {"industry": industry, "business_model": business_model}
                 else:
-                    template = self.industry_template
+                    template = industry_template
                     input_vars = ["industry"]
                     prediction_kwargs = {"industry":industry}
             else:
-                template = self.random_template
+                template = random_template
                 prediction_kwargs = {}
                 input_vars = []
 
@@ -213,7 +115,7 @@ class BusinessIdeaGeneration:
         final_idea_prompt = PromptTemplate(
             input_variables=["bus_idea"],
             partial_variables={"format_instructions": format_instructions},
-            template=self.final_output_template
+            template=final_output_template
         )
 
         final_idea_chain = LLMChain(llm=self.llm, prompt=final_idea_prompt, memory=buffer_memory)
@@ -224,7 +126,7 @@ class BusinessIdeaGeneration:
 
     def ask_questions_conv(self, buffer, idea):
 
-        question_prompt = PromptTemplate(input_variables=["idea"], template=self.question_template)
+        question_prompt = PromptTemplate(input_variables=["idea"], template=question_template)
 
         for n in range(1,6):
             question_chain = LLMChain(llm=self.llm, memory=buffer, prompt=question_prompt)

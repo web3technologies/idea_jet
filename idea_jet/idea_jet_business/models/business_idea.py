@@ -1,6 +1,8 @@
 from django.conf import settings
 from django.db import models
 
+from idea_jet_catalog.models import BusinessModelType, IndustryType
+
 
 class BusinessIdea(models.Model):
     business_name = models.CharField(max_length=255)
@@ -12,5 +14,14 @@ class BusinessIdea(models.Model):
     date_generated = models.DateTimeField(auto_now_add=True)
     logo = models.ImageField(upload_to="business_ideas")
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    business_model = models.ForeignKey(BusinessModelType, on_delete=models.DO_NOTHING, default=None, null=True)
+    industy_type = models.ForeignKey(IndustryType, on_delete=models.DO_NOTHING, default=None, null=True)
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name="business_ideas", 
+        null=True,
+        default=None
+    )
     

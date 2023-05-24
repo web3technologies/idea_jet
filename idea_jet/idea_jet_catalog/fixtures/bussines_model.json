@@ -1,0 +1,194 @@
+[
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 1,
+        "fields": {
+            "business_model_type": "E-commerce",
+            "business_model_description": "Selling products or services online directly to consumers."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 2,
+        "fields": {
+            "business_model_type": "Subscription-based",
+            "business_model_description": "Offering products or services on a recurring payment basis."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 3,
+        "fields": {
+            "business_model_type": "Freemium",
+            "business_model_description": "Offering a basic version of a product or service for free, while charging for premium features or upgrades."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 4,
+        "fields": {
+            "business_model_type": "Marketplace",
+            "business_model_description": "Facilitating transactions between buyers and sellers, often taking a commission or fee for each transaction."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 5,
+        "fields": {
+            "business_model_type": "On-demand",
+            "business_model_description": "Providing immediate access to products or services when customers request them."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 6,
+        "fields": {
+            "business_model_type": "Franchise",
+            "business_model_description": "Granting individuals or entities the right to operate a business using an established brand and business model."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 7,
+        "fields": {
+            "business_model_type": "Pay-per-use",
+            "business_model_description": "Charging customers based on their usage or consumption of a product or service."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 8,
+        "fields": {
+            "business_model_type": "Peer-to-peer",
+            "business_model_description": "Enabling individuals to directly trade or share resources or services with each other."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 9,
+        "fields": {
+            "business_model_type": "Razor and blades",
+            "business_model_description": "Selling a primary product at a low cost or even at a loss, while making profit from complementary or consumable products."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 10,
+        "fields": {
+            "business_model_type": "Licensing",
+            "business_model_description": "Granting others the right to use intellectual property, such as trademarks or patents, in exchange for fees or royalties."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 11,
+        "fields": {
+            "business_model_type": "Direct sales",
+            "business_model_description": "Selling products or services directly to customers without using intermediaries or retail stores."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 12,
+        "fields": {
+            "business_model_type": "Asset rental",
+            "business_model_description": "Renting out assets, such as vehicles or equipment, to customers for a fee."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 13,
+        "fields": {
+            "business_model_type": "Affiliate marketing",
+            "business_model_description": "Earning commissions by promoting and selling other companies' products or services."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 14,
+        "fields": {
+            "business_model_type": "Ad-based",
+            "business_model_description": "Offering free content or services and generating revenue through advertising."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 15,
+        "fields": {
+            "business_model_type": "Crowdfunding",
+            "business_model_description": "Raising funds from a large number of individuals, typically through online platforms, for a specific project or business idea."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 16,
+        "fields": {
+            "business_model_type": "Licensing or white-labeling",
+            "business_model_description": "Allowing other companies to rebrand and sell products or services under their own name."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 17,
+        "fields": {
+            "business_model_type": "Bundling",
+            "business_model_description": "Offering a package of products or services together at a discounted price."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 18,
+        "fields": {
+            "business_model_type": "Auction",
+            "business_model_description": "Conducting sales through a bidding process, where the highest bidder wins the item or service."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 19,
+        "fields": {
+            "business_model_type": "Manufacturer-direct",
+            "business_model_description": "Selling products directly from the manufacturer to consumers, bypassing traditional retail channels."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 20,
+        "fields": {
+            "business_model_type": "Cooperative",
+            "business_model_description": "Owned and operated by a group of individuals or businesses who share profits and decision-making."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 21,
+        "fields": {
+            "business_model_type": "SaaS",
+            "business_model_description": "Providing software applications to customers as a service, typically through a subscription-based model."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 22,
+        "fields": {
+            "business_model_type": "B2B",
+            "business_model_description": "B2B (Business to Business)"
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 23,
+        "fields": {
+            "business_model_type": "B2C",
+            "business_model_description": "B2C (Business to Consumer)"
+        }
+    },
+    {
+        "model": "idea_jet_catalog.businessmodeltype",
+        "pk": 24,
+        "fields": {
+            "business_model_type": "C2C",
+            "business_model_description": "C2C (Consumer to Consumer)"
+        }
+    }
+]

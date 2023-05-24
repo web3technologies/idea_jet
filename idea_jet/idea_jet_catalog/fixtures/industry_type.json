@@ -1,0 +1,178 @@
+[
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 1,
+        "fields": {
+            "industry_type": "Technology (Software and Hardware)",
+            "industry_description": "Companies involved in developing and manufacturing software and hardware solutions for various applications."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 2,
+        "fields": {
+            "industry_type": "Finance and Banking",
+            "industry_description": "Financial institutions and businesses involved in banking, lending, investments, and financial services."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 3,
+        "fields": {
+            "industry_type": "Healthcare and Pharmaceuticals",
+            "industry_description": "Organizations engaged in providing medical services, healthcare products, and pharmaceutical research and development."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 4,
+        "fields": {
+            "industry_type": "Energy (Oil, Gas, and Renewable Energy)",
+            "industry_description": "Companies involved in the exploration, production, distribution, and development of energy resources including oil, gas, and renewable sources."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 5,
+        "fields": {
+            "industry_type": "Retail and E-commerce",
+            "industry_description": "Businesses engaged in the sale of consumer goods directly to customers, both through physical stores and online platforms."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 6,
+        "fields": {
+            "industry_type": "Manufacturing (Automobiles, Aerospace, and Defense)",
+            "industry_description": "Companies involved in large-scale production and assembly of goods, such as automobiles, aircraft, and defense equipment."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 7,
+        "fields": {
+            "industry_type": "Telecommunications",
+            "industry_description": "Companies providing communication services, including telephone, internet, and data transmission."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 8,
+        "fields": {
+            "industry_type": "Consumer Goods",
+            "industry_description": "Manufacturers and retailers of products intended for personal use, including household items, food, and beverages."
+        }
+    },
+    {
+        "model": "idea_jet_catalog.industrytype",
+        "pk": 9,
+            "fields": {
+                "industry_type": "Real Estate and Property Development",
+                "industry_description": "Companies involved in the buying, selling, and development of real estate properties."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 10,
+            "fields": {
+                "industry_type": "Entertainment and Media",
+                "industry_description": "Industries encompassing media production, broadcasting, film, music, television, and other forms of entertainment."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 11,
+            "fields": {
+                "industry_type": "Transportation and Logistics",
+                "industry_description": "Businesses involved in the movement and transportation of goods and people, including shipping, logistics, and transportation services."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 12,
+            "fields": {
+                "industry_type": "Hospitality and Tourism",
+                "industry_description": "Industries providing accommodation, travel, and tourism-related services, such as hotels, restaurants, and tour operators."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 13,
+            "fields": {
+                "industry_type": "Agriculture and Food Production",
+                "industry_description": "Companies engaged in farming, crop cultivation, animal rearing, and food production and processing."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 14,
+            "fields": {
+                "industry_type": "Construction and Engineering",
+                "industry_description": "Businesses involved in the construction, design, and engineering of buildings, infrastructure, and related projects."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 15,
+            "fields": {
+                "industry_type": "Chemicals",
+                "industry_description": "Manufacturers and distributors of chemicals used in various industries, such as pharmaceuticals, agriculture, and manufacturing."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 16,
+            "fields": {
+                "industry_type": "Professional Services (Legal, Consulting, Accounting)",
+                "industry_description": "Companies offering specialized professional services, including legal, consulting, accounting, and advisory services."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 17,
+            "fields": {
+                "industry_type": "Biotechnology and Life Sciences",
+                "industry_description": "Organizations engaged in research, development, and manufacturing of biotechnology and life science products and solutions."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 18,
+            "fields": {
+                "industry_type": "Education and Training",
+                "industry_description": "Institutions and businesses providing educational services, training programs, and learning resources."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 19,
+            "fields": {
+                "industry_type": "Insurance",
+                "industry_description": "Companies engaged in the business of providing insurance coverage and risk management services."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 20,
+            "fields": {
+                "industry_type": "Fashion and Apparel",
+                "industry_description": "Manufacturers, retailers, and designers of clothing, accessories, and fashion products."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 21,
+            "fields": {
+                "industry_type": "Mining and Metals",
+                "industry_description": "Industries involved in the extraction, refining, and processing of minerals and metals."
+            }
+        },
+        {
+            "model": "idea_jet_catalog.industrytype",
+            "pk": 22,
+            "fields": {
+                "industry_type": "Pharmaceuticals",
+                "industry_description": "test"
+            }
+        }
+]
