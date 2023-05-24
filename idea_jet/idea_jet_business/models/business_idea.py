@@ -19,4 +19,10 @@ class BusinessIdea(models.Model):
         null=True,
         default=None
     )
+    original_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, 
+        on_delete=models.CASCADE, 
+        related_name="original_business_ideas",
+        default=None
+    )
     

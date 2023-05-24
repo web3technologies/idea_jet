@@ -152,7 +152,7 @@ class BusinessIdeaGenerationV2:
                     business_idea=business_output["business_idea"],
                     # business_model=BusinessModelType.objects.get(business_model_type=business_output["business_model"]),
                     # industry_type=IndustryType.objects.get(industry_type=business_output["industry_type"]),
-                    user=self.user_model.objects.get(id=user_id)
+                    original_user=self.user_model.objects.get(id=user_id)
                 )
             except (BusinessModelType.DoesNotExist, IndustryType.DoesNotExist) as e:
                 print(business_output["business_model"])
