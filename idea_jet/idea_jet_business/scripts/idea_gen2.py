@@ -74,13 +74,16 @@ class BusinessIdeaGenerationV2:
         }
 
     def _generate_random_idea(self, *args):
+        human_template = """
+                Generate a random and unique business
+            """
+        human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt],
+            messages=[self.system_prompt, human_prompt, self.system_prompt_2],
             input_variables=[],
             partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
         )
         business_query = chat_prompt.format_prompt().to_messages()
-        business_query.append(HumanMessage(content="Generate a totally random and unique business"))
         return business_query
         
     def _generate_input_idea(self, data: dict):
