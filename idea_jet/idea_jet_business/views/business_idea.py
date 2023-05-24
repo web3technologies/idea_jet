@@ -1,8 +1,10 @@
 from rest_framework import status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
+
 
 from idea_jet_business.models import BusinessIdea
 from idea_jet_business.scripts.idea_gen2 import BusinessIdeaGenerationV2
@@ -33,3 +35,15 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
     # todo make sure only user requesting has access to their business ideas
     def get_object(self):
         return super().get_object()
+    
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="save",
+        name="save_business_idea",
+    )
+    def refresh_all_accounts(self, request, *args, **kwargs):
+        b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
+        b_idea.user = self.request.user
+        b_idea.save(update_fields=["user"])
+        return Response(data={"detail": 'saved'}, status=status.HTTP_202_ACCEPTED)
