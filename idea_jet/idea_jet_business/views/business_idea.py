@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from idea_jet_business.models import BusinessIdea
 from idea_jet_business.scripts.idea_gen import BusinessIdeaGeneration
+from idea_jet_business.scripts.idea_gen2 import BusinessIdeaGenerationV2
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
 
@@ -14,11 +15,11 @@ class BusinessIdeaView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, *args, **kwargs):
-        business_idea = BusinessIdeaGeneration().run(
+        business_idea_data = BusinessIdeaGenerationV2().run(
             user_id=self.request.user.id,
             **self.request.data
             )
-        return Response(data=business_idea, status=status.HTTP_201_CREATED)
+        return Response(data=business_idea_data, status=status.HTTP_201_CREATED)
 
 
 class BusinessIdeaViewSet(viewsets.ModelViewSet):

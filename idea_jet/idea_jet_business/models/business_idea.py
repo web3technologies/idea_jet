@@ -7,12 +7,7 @@ from idea_jet_catalog.models import BusinessModelType, IndustryType
 class BusinessIdea(models.Model):
     business_name = models.CharField(max_length=255)
     business_idea = models.TextField()
-    pricing_model = models.TextField()
-    finance_model = models.TextField()
-    marketing_strategy = models.TextField()
-    white_paper = models.TextField()
     date_generated = models.DateTimeField(auto_now_add=True)
-    logo = models.ImageField(upload_to="business_ideas")
 
     business_model = models.ForeignKey(BusinessModelType, on_delete=models.DO_NOTHING, default=None, null=True)
     industy_type = models.ForeignKey(IndustryType, on_delete=models.DO_NOTHING, default=None, null=True)
