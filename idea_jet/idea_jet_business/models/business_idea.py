@@ -23,6 +23,7 @@ class BusinessIdea(models.Model):
         settings.AUTH_USER_MODEL, 
         on_delete=models.CASCADE, 
         related_name="original_business_ideas",
+        null=True,
         default=None
     )
     
