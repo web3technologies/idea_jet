@@ -7,7 +7,11 @@ from rest_framework.views import APIView
 
 
 from idea_jet_business.models import BusinessIdea
-from idea_jet_business.generation import BusinessIdeaGenerationV2, MarketResearchGenerator
+from idea_jet_business.generation import (
+    BusinessIdeaGenerationV2, 
+    CompetitorAnalysisGenerator, 
+    MarketResearchGenerator
+)
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
 
@@ -46,6 +50,8 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
         b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
         b_idea.user = self.request.user
         b_idea.save(update_fields=["user"])
-        researcher = MarketResearchGenerator()
-        researcher.run(business_id=b_idea.id)
+        # researcher = MarketResearchGenerator()
+        # researcher.run(business_id=b_idea.id)
+        competitive_analysis = CompetitorAnalysisGenerator()
+        competitive_analysis.run(business_id=b_idea.id)
         return Response(data={"detail": 'saved'}, status=status.HTTP_202_ACCEPTED)
