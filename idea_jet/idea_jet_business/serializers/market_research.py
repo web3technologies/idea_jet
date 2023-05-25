@@ -6,4 +6,4 @@ class MarketResearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MarketResearch
-        fields = "__all__"
+        exclude = ["id", "business_idea"]
