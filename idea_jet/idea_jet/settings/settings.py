@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "rest_framework",
     ###CUSTOM,
     "idea_jet_auth",
+    "idea_jet_async",
     "idea_jet_business",
     "idea_jet_catalog"
 ]
