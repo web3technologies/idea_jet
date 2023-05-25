@@ -58,7 +58,12 @@ class CompetitorAnalysisGenerator(BaseGeneration):
             self.messages.extend(market_research_query)
             competetive_analysis_generated = self.chat_model(self.messages)
             self.messages.append(competetive_analysis_generated)
-            print(competetive_analysis_generated.content)
+            
+            # self.messages.append(
+            #     HumanMessage(content=f"Based on these competitors output some competitive advantages I can implement for {business_idea.business_idea}")
+            #     )
+            
+            # print(self.chat_model(self.messages))
 
             try:
                 competetive_analysis_generated_dict = output_parser.parse(competetive_analysis_generated.content)
@@ -74,7 +79,7 @@ class CompetitorAnalysisGenerator(BaseGeneration):
                     business_idea=business_idea,
                     name=competitor["name"],
                     overview=competitor["overview"],
-                    key_features=competitor["key_features"],
+                    key_features=competitor.get("key_features", competitor.get("keyFeatures")),
                     competitive_advantage=competitor["competitive_advantage"],
                 )
                 for competitor in competetive_analysis_generated_dict["competitors"]
