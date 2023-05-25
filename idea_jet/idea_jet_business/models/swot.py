@@ -1,0 +1,1 @@
+# Idea Evaluation Tools: Consider including an interactive SWOT analysis tool (strengths, weaknesses, opportunities, threats) or a feasibility study tool. Users could input data relevant to their idea, and the tool would help them identify the idea's potential strengths and challenges.
