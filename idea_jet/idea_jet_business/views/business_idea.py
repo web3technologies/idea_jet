@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 
 
 from idea_jet_business.models import BusinessIdea
-from idea_jet_business.scripts.idea_gen2 import BusinessIdeaGenerationV2
+from idea_jet_business.generation import BusinessIdeaGenerationV2, MarketResearchGenerator
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
 
@@ -42,8 +42,10 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
         url_path="save",
         name="save_business_idea",
     )
-    def refresh_all_accounts(self, request, *args, **kwargs):
+    def save_idea(self, request, *args, **kwargs):
         b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
         b_idea.user = self.request.user
         b_idea.save(update_fields=["user"])
+        researcher = MarketResearchGenerator()
+        researcher.run(business_id=b_idea.id)
         return Response(data={"detail": 'saved'}, status=status.HTTP_202_ACCEPTED)

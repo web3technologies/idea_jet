@@ -1,11 +1,12 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from idea_jet_business.views import BusinessIdeaView, BusinessIdeaViewSet
+from idea_jet_business.views import BusinessIdeaView, BusinessIdeaViewSet, MarketResearchViewset
 
 
 router = routers.SimpleRouter()
 router.register(r'business-ideas', BusinessIdeaViewSet)
+router.register(r"market-research", MarketResearchViewset)
 
 
 urlpatterns = [

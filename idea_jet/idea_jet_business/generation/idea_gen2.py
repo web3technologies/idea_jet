@@ -3,18 +3,17 @@ from django.db import transaction
 from django.contrib.auth import get_user_model
 from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-from langchain.schema import BaseOutputParser, OutputParserException
-from langchain.schema import (SystemMessage, HumanMessage, AIMessage)
+from langchain.schema import OutputParserException
+from langchain.schema import HumanMessage
 from langchain.prompts.chat import (
     HumanMessagePromptTemplate, 
     ChatPromptTemplate, 
-    SystemMessagePromptTemplate, 
-    AIMessagePromptTemplate
+    SystemMessagePromptTemplate
 )
 import openai
 import pprint
 
-from idea_jet_business.models import BusinessIdea, ExecutionStep, Feature
+from idea_jet_business.models import BusinessIdea, ConversationSummary, ExecutionStep, Feature
 from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
@@ -36,7 +35,7 @@ class BusinessIdeaGenerationV2:
         Your goal is to:
             - Generate a unique business idea
             - Generate a name for this business
-            - Generate an array of product features
+            - Generate an array of product Key Features and Benefits
             - Generate an array of three execution steps
             - Generate a follow up question that can help you gain more context for the business
             {format_instructions}
@@ -119,6 +118,18 @@ class BusinessIdeaGenerationV2:
         )
         business_query = chat_prompt.format_prompt(existingIdea=data.get("existingIdea"))
         return business_query.to_messages()
+    
+
+    # def _summarize():
+        # print("summarizing conversation...")
+        # self.messages.append(HumanMessage(content="Summarize this entire conversation"))
+        # ai_conversation_summary = self.chat_model(self.messages)
+        # self.messages.append(ai_conversation_summary)
+                    # conversation_summary = ConversationSummary.objects.create(
+        #     business_idea=b_idea,
+        #     summary=ai_conversation_summary.content,
+        #     type="INITIAL"
+        # )
         
     def run(self, user_id, action, data):
 
@@ -129,34 +140,29 @@ class BusinessIdeaGenerationV2:
 
             print(f"generating {action} idea ... \n")
             business_output = self.chat_model(self.messages)
-            print(business_output)
-            print()
+            self.messages.append(business_output)
+
             try:
-                business_output = self.output_parser.parse(business_output.content)
+                business_output_dict = self.output_parser.parse(business_output.content)
             except OutputParserException as e:
                 print("json error attempting to fix")
                 # catch the exception for the json output and tell chat gpt to correct the json
                 self.messages.append(HumanMessage(content="You outputed incorrect json as described earlier. Fix this and output correct json."))
-                business_output = self.chat_model(self.messages)
-                business_output = self.output_parser.parse(business_output.content)
+                business_output_dict = self.chat_model(self.messages)
+                business_output_dict = self.output_parser.parse(business_output.content)
 
-            pprint.pprint(business_output)
-            # self.messages.append(HumanMessage(content="Summarize this entire conversation"))
-            # ai_response = self.chat_model(self.messages)
-            # self.messages.append(ai_response)
-            # print(ai_response)
             print("creating objects")
             try:
                 b_idea = BusinessIdea.objects.create(
-                    business_name=business_output["business_name"],
-                    business_idea=business_output["business_idea"],
-                    # business_model=BusinessModelType.objects.get(business_model_type=business_output["business_model"]),
-                    # industry_type=IndustryType.objects.get(industry_type=business_output["industry_type"]),
+                    business_name=business_output_dict["business_name"],
+                    business_idea=business_output_dict["business_idea"],
+                    # business_model=BusinessModelType.objects.get(business_model_type=business_output_dict["business_model"]),
+                    # industry_type=IndustryType.objects.get(industry_type=business_output_dict["industry_type"]),
                     original_user=self.user_model.objects.get(id=user_id)
                 )
             except (BusinessModelType.DoesNotExist, IndustryType.DoesNotExist) as e:
-                print(business_output["business_model"])
-                print(business_output["industry_type"])
+                print(business_output_dict["business_model"])
+                print(business_output_dict["industry_type"])
                 raise e
             
             features_to_create = [
@@ -164,14 +170,14 @@ class BusinessIdeaGenerationV2:
                     feature=feature,
                     business_idea=b_idea
                 )
-                for feature in business_output.get("features")
+                for feature in business_output_dict.get("features")
             ]
             execution_steps_to_create = [
                 ExecutionStep(
                     execution_step=execution_step,
                     business_idea=b_idea
                 )
-                for execution_step in business_output.get("execution_steps")
+                for execution_step in business_output_dict.get("execution_steps")
             ]
             Feature.objects.bulk_create(features_to_create)
             ExecutionStep.objects.bulk_create(execution_steps_to_create)
