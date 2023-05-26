@@ -71,6 +71,7 @@ install_requires = [
     "psycopg2-binary ~= 2.9.6",
     "pyarrow ~= 12.0.0",
     "pycryptodome ~= 3.17",
+    "pycurl ~= 7.44.1",
     "pydantic ~= 1.10.7",
     "pydeck ~= 0.8.1b0",
     "Pygments ~= 2.15.1",

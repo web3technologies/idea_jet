@@ -15,3 +15,5 @@ STATICFILES_DIRS = [
     os.path.join("/applications/idea_jet/", "venv/lib/python3.10/site-packages/idea_jet_static"),
     os.path.join("/applications/idea_jet/", "venv/lib/python3.10/site-packages/idea_jet_business/templates/idea_jet_business/")
 ]
+
+CELERY_BROKER_URL = f'sqs://{config("AWS_ACCESS_KEY_ID")}:{config("AWS_SECRET_ACCESS_KEY")}@'
