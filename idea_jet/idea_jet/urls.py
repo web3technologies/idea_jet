@@ -11,5 +11,6 @@ urlpatterns = [
     path('login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path("auth/", include("idea_jet_auth.urls")),
+    path("async/", include("idea_jet_async.urls")),
     path("business-idea/", include("idea_jet_business.urls"))
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
