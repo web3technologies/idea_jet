@@ -1,3 +1,4 @@
+from django.db import transaction
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -5,12 +6,10 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-
+from idea_jet_async.tasks import generate_business_idea_task, generate_business_idea_metadata_task 
 from idea_jet_business.models import BusinessIdea
 from idea_jet_business.generation import (
-    BusinessIdeaGenerationV2, 
-    CompetitorAnalysisGenerator, 
-    MarketResearchGenerator
+    BusinessIdeaGenerationV2
 )
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
@@ -47,11 +46,9 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
         name="save_business_idea",
     )
     def save_idea(self, request, *args, **kwargs):
-        b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
-        b_idea.user = self.request.user
-        b_idea.save(update_fields=["user"])
-        # researcher = MarketResearchGenerator()
-        # researcher.run(business_id=b_idea.id)
-        competitive_analysis = CompetitorAnalysisGenerator()
-        competitive_analysis.run(business_id=b_idea.id)
-        return Response(data={"detail": 'saved'}, status=status.HTTP_202_ACCEPTED)
+        with transaction.atomic():
+            b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
+            b_idea.user = self.request.user
+            b_idea.save(update_fields=["user"])
+            task_sig = generate_business_idea_metadata_task.delay(b_idea.id)
+        return Response(data={"detail": task_sig.id}, status=status.HTTP_202_ACCEPTED)

@@ -43,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     ###Third Party
     "rest_framework",
+    'django_celery_results',
+    'django_extensions',
+    'django_celery_beat',
     ###CUSTOM,
     "idea_jet_auth",
     "idea_jet_async",
@@ -159,6 +162,16 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+CELERY_BROKER_URL = 'amqp://'
+
+CELERY_TIMEZONE = TIME_ZONE
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+CELERY_RESULT_BACKEND = "django-db"
+CELERY_RESULT_EXPIRES = timedelta(days=30)
+CELERY_TASK_TRACK_STARTED = True
+CELERY_ENABLE_REMOTE_CONTROL = False
+CELERY_SEND_EVENTS = False
+CELERY_COUNTDOWN = 5
 
 LOGGING = {
     "version": 1,
