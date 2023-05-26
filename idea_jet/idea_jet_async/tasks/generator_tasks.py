@@ -5,8 +5,8 @@ from idea_jet_business.generation import BusinessIdeaGenerationV2, MarketResearc
 
 
 @shared_task(bind=True, name="generate_business_idea_task", base=BaseCeleryTask)
-def generate_business_idea_task(self, user_id, *args, **kwargs):
-    return BusinessIdeaGenerationV2().run(user_id)
+def generate_business_idea_task(self, user_id, action, data, *args, **kwargs):
+    return BusinessIdeaGenerationV2().run(user_id=user_id, action=action, data=data)
 
 
 @shared_task(bind=True, name="generate_competitor_analysis_task", base=BaseCeleryTask)
