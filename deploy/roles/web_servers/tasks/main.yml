@@ -111,25 +111,25 @@
     enabled: yes
   when: ansible_distribution == "Ubuntu"
 
-- name: copy rabbitmq install script
-  copy:
-    src: "/var/lib/jenkins/workspace/idea_jet_{{ deploy_env }}/deploy/scripts/installrabbitmq.sh"
-    dest: "/tmp/installrabbitmq.sh"
-    mode: 0777
+# - name: copy rabbitmq install script
+#   copy:
+#     src: "/var/lib/jenkins/workspace/idea_jet_{{ deploy_env }}/deploy/scripts/installrabbitmq.sh"
+#     dest: "/tmp/installrabbitmq.sh"
+#     mode: 0777
 
-- name: run install of rabbitmq 
-  shell: sh /tmp/installrabbitmq.sh
+# - name: run install of rabbitmq 
+#   shell: sh /tmp/installrabbitmq.sh
 
-- name: remove rabbitmq install script
-  file:
-    path: /tmp/installrabbitmq.sh
-    state: absent
+# - name: remove rabbitmq install script
+#   file:
+#     path: /tmp/installrabbitmq.sh
+#     state: absent
 
-- name: Ensure rabbitmq is started and enabled (if configured).
-  service:
-    name: rabbitmq-server
-    state: started
-    enabled: true
+# - name: Ensure rabbitmq is started and enabled (if configured).
+#   service:
+#     name: rabbitmq-server
+#     state: started
+#     enabled: true
 
 - name: create celery var and opt directories
   file:
