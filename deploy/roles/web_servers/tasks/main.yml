@@ -113,7 +113,7 @@
 
 - name: copy rabbitmq install script
   copy:
-    src: "/var/lib/workspace/idea_jet_{{ deploy_env }}/deploy/scripts/installrabbitmq.sh"
+    src: "/var/lib/jenkins/workspace/idea_jet_{{ deploy_env }}/deploy/scripts/installrabbitmq.sh"
     dest: "/tmp/installrabbitmq.sh"
     mode: 0777
 
