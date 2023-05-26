@@ -1,7 +1,4 @@
-from decouple import config
 from django.db import transaction
-from django.contrib.auth import get_user_model
-from langchain.chat_models import ChatOpenAI
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
 from langchain.schema import OutputParserException
 from langchain.schema import HumanMessage
@@ -10,18 +7,14 @@ from langchain.prompts.chat import (
     ChatPromptTemplate, 
     SystemMessagePromptTemplate
 )
-import openai
-import pprint
 
 from idea_jet_business.models import BusinessIdea, ConversationSummary, ExecutionStep, Feature
 from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.serializers import BusinessIdeaSerializer
+from idea_jet_business.generation.base import BaseGeneration
 
 
-OPEN_API_KEY = config("OPEN_API_KEY")
-
-
-class BusinessIdeaGenerationV2:
+class BusinessIdeaGenerationV2(BaseGeneration):
 
     system_template = """
             You are a very successful entrepreneur. 
@@ -45,13 +38,10 @@ class BusinessIdeaGenerationV2:
     system_prompt = SystemMessagePromptTemplate.from_template(system_template)
     system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
 
-    def __init__(self) -> None:
-        openai.api_key = OPEN_API_KEY
-        self.chat_model = ChatOpenAI(temperature=1, model="gpt-3.5-turbo", openai_api_key=OPEN_API_KEY)
+    def __init__(self, model="gpt-3.5-turbo") -> None:
+        super().__init__(model)
         self.industries = list(IndustryType.objects.all().values_list("industry_type", flat=True))
         self.business_models = list(BusinessModelType.objects.all().values_list("business_model_type", flat=True))
-        self.user_model = get_user_model()
-        self.messages = []
         self.response_schemas = [
                 ResponseSchema(name="business_name", description="This is the name of the business you have generated"),
                 ResponseSchema(name="business_idea", description="This is the business idea you will generate"),
