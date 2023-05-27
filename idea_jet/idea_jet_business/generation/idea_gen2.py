@@ -7,11 +7,14 @@ from langchain.prompts.chat import (
     ChatPromptTemplate, 
     SystemMessagePromptTemplate
 )
+import random
 
 from idea_jet_business.models import BusinessIdea, ConversationSummary, ExecutionStep, Feature
 from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.serializers import BusinessIdeaSerializer
 from idea_jet_business.generation.base import BaseGeneration
+import openai
+
 
 
 class BusinessIdeaGenerationV2(BaseGeneration):
@@ -26,7 +29,7 @@ class BusinessIdeaGenerationV2(BaseGeneration):
     
     few_shot_template = """
         Here are some examples of startups in the past that have been successful:
-        Use these examples delimited by triple backticks to help you create a new and unique idea, that has the same level of business potential as these startups.
+        Examples are delimited by triple backticks.
 
         Examples:
         ``` 1. Robinhood
@@ -74,8 +77,9 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             4 - Generate an array of three execution steps
             5 - Generate a score for how original the business idea is
             6 - Generate a score for business potential
-            7 - Generate a startup difficulty score
-            8 - Generate a reason for why you chose this difficulty score
+            7 - Generate a reason for why you chsoe this potential score
+            8 - Generate a startup difficulty score
+            9 - Generate a reason for why you chose this difficulty score
             {format_instructions}
     """
 
@@ -85,17 +89,47 @@ class BusinessIdeaGenerationV2(BaseGeneration):
     system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
     few_shot_prompt = SystemMessagePromptTemplate.from_template(few_shot_template)
 
+    industries_l = [
+        'FinTech',
+        'EdTech',
+        'E-commerce',
+        'Ride-Sharing',
+        'Food Delivery',
+        'Telecommunication',
+        'Workplace Software',
+        'Cloud Data Warehousing',
+        'Project Management Software',
+        'Robotic Process Automation',
+        'Aerospace',
+        'Data Analytics',
+        'Biotech',
+        'Healthtech',
+        'Cybersecurity',
+        'Artificial Intelligence',
+        'Virtual Reality',
+        'Blockchain',
+        'Gaming',
+        'InsurTech',
+        'GreenTech',
+        'Social Media',
+        'On-demand Services',
+        'IoT',
+        'Augmented Reality'
+    ]
+
+
     def __init__(self, model="gpt-3.5-turbo") -> None:
         super().__init__(model)
         self.industries = list(IndustryType.objects.all().values_list("industry_type", flat=True))
         self.business_models = list(BusinessModelType.objects.all().values_list("business_model_type", flat=True))
         self.response_schemas = [
                 ResponseSchema(name="business_name", description="This is the name of the business you have generated"),
-                ResponseSchema(name="business_idea", description="This is the detailed business idea you will generate"),
+                ResponseSchema(name="business_idea", description="This is the unique startup business idea you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
                 ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
                 ResponseSchema(name="originality_score", description="This is the originality score you will generate"),
                 ResponseSchema(name="potential_score", description="This is the business potential score you will generate"),
+                ResponseSchema(name="potential_reason", description="This is the business potential reason you will generate"),
                 ResponseSchema(name="difficulty_score", description="This is the startup difficulty score you will generate"),
                 ResponseSchema(name="difficulty_reason", description="This is the difficulty reason you will generate"),
                 # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
@@ -116,14 +150,35 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         ### few shot prompting here. Get a list of all companies and add name and business idea to the Catalog and use those as the few shot prompt
         ### make sure to instruct the ai not to copy but find a competitive advantage
         ### scrape startup pages to populate the database every day
-        human_template = """Generate a random and unique business idea in the industry delimited by triple backticks ```{industry}```"""
+        human_template = """
+            Your task is to perform the following actions:
+            1 - Generate a unique startup business idea in the industry delimited by triple backticks. 
+                - Focus the unique startup business idea on quick to build minimum viable products. 
+                - Focus the unique startup business idea on low barier to entry ideas.
+                - Ensure that the unique business idea has a competitive advantage that will set it apart from its competitors.  
+                - The unique startup business idea should be detailed in 100 or more words.
+            2 - Generate a name for this unique startup business idea
+            3 - Generate an array of product Key Features and Benefits for this unique startup business idea
+            4 - Generate an array of three execution steps for this unique startup business idea
+            5 - Generate a score for how original the unique startup business idea is
+            6 - Generate a score for business potential for the unique startup business idea
+            7 - Generate a reason for why you chose this potential for the score unique startup business idea
+            8 - Generate a startup difficulty score for the unique startup business idea
+            9 - Generate a reason for why you chose this difficulty score for the unique startup business idea
+
+            Industry: ```{industry}```
+
+            {format_instructions}
+        """
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt, self.few_shot_prompt, human_prompt, self.system_prompt_2],
+            messages=[self.system_prompt, self.few_shot_prompt, human_prompt],
             input_variables=["industry"],
             partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
         )
-        business_query = chat_prompt.format_prompt(industry="FinTech").to_messages()
+        industry = random.choice(self.industries_l)
+        print(industry)
+        business_query = chat_prompt.format_prompt(industry=industry).to_messages()
         return business_query
         
     def _generate_input_idea(self, data: dict):
@@ -157,17 +212,6 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         business_query = chat_prompt.format_prompt(existingIdea=data.get("existingIdea"))
         return business_query.to_messages()
     
-
-    # def _summarize():
-        # print("summarizing conversation...")
-        # self.messages.append(HumanMessage(content="Summarize this entire conversation"))
-        # ai_conversation_summary = self.chat_model(self.messages)
-        # self.messages.append(ai_conversation_summary)
-                    # conversation_summary = ConversationSummary.objects.create(
-        #     business_idea=b_idea,
-        #     summary=ai_conversation_summary.content,
-        #     type="INITIAL"
-        # )
         
     def run(self, user_id, action, data):
 
@@ -192,6 +236,7 @@ class BusinessIdeaGenerationV2(BaseGeneration):
 
             print(f"originality: {business_output_dict['originality_score']}")
             print(f"potential: {business_output_dict['potential_score']}")
+            print(f"potential reason: {business_output_dict['potential_reason']}")
             print(f"difficulty: {business_output_dict['difficulty_score']}")
             print(f"difficulty reason: {business_output_dict['difficulty_reason']}")
             print("creating objects")
