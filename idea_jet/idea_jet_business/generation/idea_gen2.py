@@ -72,8 +72,10 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             2 - Generate a name for this business
             3 - Generate an array of product Key Features and Benefits
             4 - Generate an array of three execution steps
-            5 - Generate a follow up question that can help you gain more context for the business
-            6 - Generate a score for how original the business idea is
+            5 - Generate a score for how original the business idea is
+            6 - Generate a score for business potential
+            7 - Generate a startup difficulty score
+            8 - Generate a reason for why you chose this difficulty score
             {format_instructions}
     """
 
@@ -92,8 +94,10 @@ class BusinessIdeaGenerationV2(BaseGeneration):
                 ResponseSchema(name="business_idea", description="This is the detailed business idea you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
                 ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
-                ResponseSchema(name="follow_up_question", description="This is the follow up question you will generate"),
                 ResponseSchema(name="originality_score", description="This is the originality score you will generate"),
+                ResponseSchema(name="potential_score", description="This is the business potential score you will generate"),
+                ResponseSchema(name="difficulty_score", description="This is the startup difficulty score you will generate"),
+                ResponseSchema(name="difficulty_reason", description="This is the difficulty reason you will generate"),
                 # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
                 # ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
             ]
@@ -112,16 +116,14 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         ### few shot prompting here. Get a list of all companies and add name and business idea to the Catalog and use those as the few shot prompt
         ### make sure to instruct the ai not to copy but find a competitive advantage
         ### scrape startup pages to populate the database every day
-        human_template = """
-            Generate a random and unique business idea. Please avoid Eco businesses.
-            """
+        human_template = """Generate a random and unique business idea in the industry delimited by triple backticks ```{industry}```"""
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
             messages=[self.system_prompt, self.few_shot_prompt, human_prompt, self.system_prompt_2],
-            input_variables=[],
+            input_variables=["industry"],
             partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
         )
-        business_query = chat_prompt.format_prompt().to_messages()
+        business_query = chat_prompt.format_prompt(industry="FinTech").to_messages()
         return business_query
         
     def _generate_input_idea(self, data: dict):
@@ -188,7 +190,10 @@ class BusinessIdeaGenerationV2(BaseGeneration):
                 business_output_dict = self.chat_model(self.messages)
                 business_output_dict = self.output_parser.parse(business_output.content)
 
-            print(business_output_dict["originality_score"])
+            print(f"originality: {business_output_dict['originality_score']}")
+            print(f"potential: {business_output_dict['potential_score']}")
+            print(f"difficulty: {business_output_dict['difficulty_score']}")
+            print(f"difficulty reason: {business_output_dict['difficulty_reason']}")
             print("creating objects")
             try:
                 b_idea = BusinessIdea.objects.create(
