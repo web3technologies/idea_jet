@@ -24,19 +24,64 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             You have also raised millions of dollars in funding and have exited with multi million dollar exits.
         """
     
+    few_shot_template = """
+        Here are some examples of startups in the past that have been successful:
+        Use these examples delimited by triple backticks to help you create a new and unique idea, that has the same level of business potential as these startups.
+
+        Examples:
+        ``` 1. Robinhood
+                Business Idea: A Financial services platform that offers commission-free trading for stocks, ETFs, options, and cryptocurrencies. Aimed at making financial markets more accessible to the average person.
+                Industry: FinTech
+                Features:
+                    Commission-free trading
+                    Accessibility to various types of investments (stocks, ETFs, options, cryptocurrencies)
+                    User-friendly interface
+            2. Nubank
+                Business Idea: Brazilian neobank and the largest Fintech in Latin America. It provides services like fee-free credit cards, personal loans, free transfer accounts, and investment options.
+                Industry: FinTech
+                Features:
+                    Fee-free credit cards
+                    Personal loans
+                    Free transfer accounts
+            3. Klarna
+                Business Idea: Swedish fintech company that provides online financial services such as payments for online storefronts and direct payments, post-purchase payments, and more.
+                Industry: FinTech
+                Features:
+                    Online payment services
+                    Direct payments
+                    Post-purchase payments
+            4. Canva
+                Business Idea: Online design and publishing tool with a simple drag-and-drop interface. It provides free access to a wide variety of design tools and options, as well as premium options for paying customers.
+                Industry: Design
+                Features:
+                    Drag-and-drop design interface
+                    Variety of design tools and options
+                    Free access with premium options
+            5. Coursera
+                Business Idea: American online learning platform that offers massive open online courses (MOOC), specializations, and degrees in a variety of subjects from universities and institutions around the world.
+                Industry: EdTech
+                Features:
+                    Offers Massive Open Online Courses (MOOCs)
+                    Provides specializations and degrees
+                    Collaborates with universities and institutions around the world```
+    """
+
     system_template_2 = """
-        Your goal is to:
-            - Generate a unique business idea
-            - Generate a name for this business
-            - Generate an array of product Key Features and Benefits
-            - Generate an array of three execution steps
-            - Generate a follow up question that can help you gain more context for the business
+        Your task is to perform the following actions:
+            1 - Generate a unique, original and detailed business idea
+            2 - Generate a name for this business
+            3 - Generate an array of product Key Features and Benefits
+            4 - Generate an array of three execution steps
+            5 - Generate a follow up question that can help you gain more context for the business
+            6 - Generate a score for how original the business idea is
             {format_instructions}
     """
+
             # - Generate the business model type for the business based on these business models {business_models}
             # - Generate the industry type the business is in based on these {industry_types}    
     system_prompt = SystemMessagePromptTemplate.from_template(system_template)
     system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
+    few_shot_prompt = SystemMessagePromptTemplate.from_template(few_shot_template)
 
     def __init__(self, model="gpt-3.5-turbo") -> None:
         super().__init__(model)
@@ -44,10 +89,11 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         self.business_models = list(BusinessModelType.objects.all().values_list("business_model_type", flat=True))
         self.response_schemas = [
                 ResponseSchema(name="business_name", description="This is the name of the business you have generated"),
-                ResponseSchema(name="business_idea", description="This is the business idea you will generate"),
+                ResponseSchema(name="business_idea", description="This is the detailed business idea you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
                 ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
                 ResponseSchema(name="follow_up_question", description="This is the follow up question you will generate"),
+                ResponseSchema(name="originality_score", description="This is the originality score you will generate"),
                 # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
                 # ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
             ]
@@ -63,12 +109,15 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         }
 
     def _generate_random_idea(self, *args):
+        ### few shot prompting here. Get a list of all companies and add name and business idea to the Catalog and use those as the few shot prompt
+        ### make sure to instruct the ai not to copy but find a competitive advantage
+        ### scrape startup pages to populate the database every day
         human_template = """
-                Generate a random and unique business
+            Generate a random and unique business idea. Please avoid Eco businesses.
             """
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt, human_prompt, self.system_prompt_2],
+            messages=[self.system_prompt, self.few_shot_prompt, human_prompt, self.system_prompt_2],
             input_variables=[],
             partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
         )
@@ -95,10 +144,7 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         return business_query.to_messages()
     
     def _generate_user_idea(self, data: dict):
-        human_template = """
-                I have this business idea: {existingIdea}
-                Use this idea to create a unique business
-            """
+        human_template = """I have the start of a business idea and I want you to help me expand on this. Use the idea delimited by tripple back ticks to create a unique business. ```{existingIdea}```"""
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
 
         chat_prompt = ChatPromptTemplate(
@@ -135,12 +181,14 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             try:
                 business_output_dict = self.output_parser.parse(business_output.content)
             except OutputParserException as e:
-                print("json error attempting to fix")
+                print("json error attempting to fix\n")
+                print(business_output.content + "\n")
                 # catch the exception for the json output and tell chat gpt to correct the json
                 self.messages.append(HumanMessage(content="You outputed incorrect json as described earlier. Fix this and output correct json."))
                 business_output_dict = self.chat_model(self.messages)
                 business_output_dict = self.output_parser.parse(business_output.content)
 
+            print(business_output_dict["originality_score"])
             print("creating objects")
             try:
                 b_idea = BusinessIdea.objects.create(
