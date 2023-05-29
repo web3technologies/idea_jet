@@ -1,4 +1,6 @@
 from .idea_gen2 import BusinessIdeaGenerationV2
+from .idea_gen3 import BusinessIdeaGenerationV3
+from .idea_gen4 import BusinessIdeaGenerationV4
 from .competitor_analysis import CompetitorAnalysisGenerator
 from .logo_generation import LogoGenerator
 from .market_research import MarketResearchGenerator

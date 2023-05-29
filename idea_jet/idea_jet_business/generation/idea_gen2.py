@@ -212,7 +212,27 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         business_query = chat_prompt.format_prompt(existingIdea=data.get("existingIdea"))
         return business_query.to_messages()
     
-        
+
+    # def _summarize():
+        # print("summarizing conversation...")
+        # self.messages.append(HumanMessage(content="Summarize this entire conversation"))
+        # ai_conversation_summary = self.chat_model(self.messages)
+        # self.messages.append(ai_conversation_summary)
+                    # conversation_summary = ConversationSummary.objects.create(
+        #     business_idea=b_idea,
+        #     summary=ai_conversation_summary.content,
+        #     type="INITIAL"
+        # )
+
+    def _ask_questions(self, business_idea):
+
+        questions = []
+        for i in range(0,4):
+            question = self.chat_model([HumanMessage(content=f"Ask a question about this bsuiness idea delimited by tripple backticks that can help you understand the idea better. ```{business_idea}```")])
+            print(question.content)
+
+
+
     def run(self, user_id, action, data):
 
         with transaction.atomic():
@@ -239,6 +259,8 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             print(f"potential reason: {business_output_dict['potential_reason']}")
             print(f"difficulty: {business_output_dict['difficulty_score']}")
             print(f"difficulty reason: {business_output_dict['difficulty_reason']}")
+            self._ask_questions(business_idea=business_output_dict.get("business_idea"))
+
             print("creating objects")
             try:
                 b_idea = BusinessIdea.objects.create(
