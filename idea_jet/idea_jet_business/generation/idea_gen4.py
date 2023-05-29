@@ -73,11 +73,18 @@ class BusinessIdeaGenerationV4(BaseGeneration):
             k=5,
             return_messages=True
         )
-
+        search = SerpAPIWrapper(serpapi_api_key=config("SERP_API_KEY"))
+        tools = [
+            Tool(
+                name = "search",
+                func=search.run,
+                description="useful when you need to research industry trends"
+            ),
+        ]
         # initialize agent with tools
         agent = initialize_agent(
             agent=AgentType.CHAT_CONVERSATIONAL_REACT_DESCRIPTION,
-            tools=load_tools(["serpapi"]),
+            tools=tools,
             llm=self.chat_model,
             verbose=True,
             max_iterations=3,
@@ -101,18 +108,10 @@ class BusinessIdeaGenerationV4(BaseGeneration):
         # agent.agent.llm_chain.prompt = new_prompt
         # agent.tools = load_tools(["serpapi"])
 
-        industry = random.choice(self.industries_l) 
-        # prompt = (
-        #     "Lets think of a solution step by step:" + \
-        #     f"I would like you to generate a unique startup idea in the {industry} industry." + \
-        #     "Here are the steps I would like you to perform:" + \
-        #     f"1. Perform some market research to understand the current market of the {industry} industry." + \
-        #     f"2. Then generate a new and unique business idea in the {industry}."
-        #     f"3. Generate a list of features for this startup idea."
-        # )
+        industry = random.choice(self.industries_l)
 
         
-        res = agent(f"provide 3 pieces of recent industry trends for this industry: {industry}")
+        res = agent(f"research and create a list 5 pieces of recent industry trends in 2023 for this industry marked by tripple backticks: ```{industry}```")
         return res
 
 
