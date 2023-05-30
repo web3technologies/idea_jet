@@ -75,12 +75,25 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             2 - Generate a name for this business
             3 - Generate an array of product Key Features and Benefits
             4 - Generate an array of three execution steps
-            5 - Generate a score for how original the business idea is
-            6 - Generate a score for business potential
-            7 - Generate a reason for why you chsoe this potential score
-            8 - Generate a startup difficulty score
-            9 - Generate a reason for why you chose this difficulty score
             {format_instructions}
+    """
+
+    tot_template = """
+        For each of the three proposed business ideas delimited by tripple backticks, evaluate their potential. 
+        Consider their pros and cons, initial effort needed, implementation difficulty, potential challenges, and the expected outcomes. 
+        Assign a probability of success and a confidence level to each option based on these factors.
+        ```{ideas}```
+    """
+
+    tot_template_2 = """
+        For each business idea, deepen the thought process. 
+        Generate potential scenarios, strategies for implementation, any necessary partnerships or resources, and how potential obstacles might be overcome. 
+        Also, consider any potential unexpected outcomes and how they might be handled.
+    """
+
+    tot_template_3 = """
+        Based on the evaluations and scenarios, rank the business ideas in order of promise. 
+        Provide a justification for each ranking and offer any final thoughts or considerations for each business idea
     """
 
             # - Generate the business model type for the business based on these business models {business_models}
@@ -88,6 +101,11 @@ class BusinessIdeaGenerationV2(BaseGeneration):
     system_prompt = SystemMessagePromptTemplate.from_template(system_template)
     system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
     few_shot_prompt = SystemMessagePromptTemplate.from_template(few_shot_template)
+
+    tot_prompt = HumanMessagePromptTemplate.from_template(tot_template)
+    tot_prompt_2 = HumanMessagePromptTemplate.from_template(tot_template_2)
+    tot_prompt_3 = HumanMessagePromptTemplate.from_template(tot_template_3)
+
 
     industries_l = [
         'FinTech',
@@ -127,13 +145,8 @@ class BusinessIdeaGenerationV2(BaseGeneration):
                 ResponseSchema(name="business_idea", description="This is the unique startup business idea you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
                 ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
-                ResponseSchema(name="originality_score", description="This is the originality score you will generate"),
-                ResponseSchema(name="potential_score", description="This is the business potential score you will generate"),
-                ResponseSchema(name="potential_reason", description="This is the business potential reason you will generate"),
-                ResponseSchema(name="difficulty_score", description="This is the startup difficulty score you will generate"),
-                ResponseSchema(name="difficulty_reason", description="This is the difficulty reason you will generate"),
-                # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
-                # ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
+                ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
+                ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
             ]
         self.output_parser = StructuredOutputParser.from_response_schemas(self.response_schemas)
 
@@ -157,24 +170,25 @@ class BusinessIdeaGenerationV2(BaseGeneration):
                 - Focus the unique startup business idea on low barier to entry ideas.
                 - Ensure that the unique business idea has a competitive advantage that will set it apart from its competitors.  
                 - The unique startup business idea should be detailed in 100 or more words.
+                - Brainstorm about new opportunities.
             2 - Generate a name for this unique startup business idea
             3 - Generate an array of product Key Features and Benefits for this unique startup business idea
-            4 - Generate an array of three execution steps for this unique startup business idea
-            5 - Generate a score for how original the unique startup business idea is
-            6 - Generate a score for business potential for the unique startup business idea
-            7 - Generate a reason for why you chose this potential for the score unique startup business idea
-            8 - Generate a startup difficulty score for the unique startup business idea
-            9 - Generate a reason for why you chose this difficulty score for the unique startup business idea
 
             Industry: ```{industry}```
-
-            {format_instructions}
         """
+            # {format_instructions}
+            # 4 - Generate an array of three execution steps for this unique startup business idea
+            # 5 - Generate a score for how original the unique startup business idea is
+            # 6 - Generate a score for business potential for the unique startup business idea
+            # 7 - Generate a reason for why you chose this potential for the score unique startup business idea
+            # 8 - Generate a startup difficulty score for the unique startup business idea
+            # 9 - Generate a reason for why you chose this difficulty score for the unique startup business idea
+
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
             messages=[self.system_prompt, self.few_shot_prompt, human_prompt],
             input_variables=["industry"],
-            partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
+            # partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
         )
         industry = random.choice(self.industries_l)
         print(industry)
@@ -221,6 +235,37 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             print(question.content)
 
 
+    def _generate_idea_with_tree_of_thought(self, action):
+        tot_messages = []
+        bus_ideas = []
+        for i in range(1,4):
+            print(f"generating {action} idea #{i}... \n")
+            business_output = self.chat_model(self.messages)
+            bus_ideas.append(business_output.content)
+
+        chat_prompt = ChatPromptTemplate(
+            messages=[self.tot_prompt],
+            input_variables=["ideas"],
+        )
+        query = chat_prompt.format_prompt(ideas="\n".join(bus_ideas))
+
+        tot_messages.extend(query.to_messages())
+
+        res = self.chat_model(tot_messages)
+        print(res.content)
+        tot_messages.append(res)
+        
+        tot_messages.append(HumanMessage(content=self.tot_template_2))
+        res_2 = self.chat_model(tot_messages)
+        print(res_2.content)
+        tot_messages.append(res_2)
+
+        tot_messages.append(HumanMessage(content=self.tot_template_3))
+        res_3 = self.chat_model(tot_messages)
+        print(res_3.content)
+
+        return res_3
+
 
     def run(self, user_id, action, data):
 
@@ -229,26 +274,19 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             business_query = self.idea_generation_mapping[action](data)
             self.messages.extend(business_query)
 
-            print(f"generating {action} idea ... \n")
-            business_output = self.chat_model(self.messages)
-            self.messages.append(business_output)
-
+            idea_to_use = self._generate_idea_with_tree_of_thought(action)
+            
+            self.messages.append(idea_to_use)
             try:
-                business_output_dict = self.output_parser.parse(business_output.content)
+                business_output_dict = self.output_parser.parse(idea_to_use.content)
             except OutputParserException as e:
                 print("json error attempting to fix\n")
-                print(business_output.content + "\n")
+                print(idea_to_use.content + "\n")
                 # catch the exception for the json output and tell chat gpt to correct the json
                 self.messages.append(HumanMessage(content="You outputed incorrect json as described earlier. Fix this and output correct json."))
                 business_output_dict = self.chat_model(self.messages)
-                business_output_dict = self.output_parser.parse(business_output.content)
+                business_output_dict = self.output_parser.parse(idea_to_use.content)
 
-            print(f"originality: {business_output_dict['originality_score']}")
-            print(f"potential: {business_output_dict['potential_score']}")
-            print(f"potential reason: {business_output_dict['potential_reason']}")
-            print(f"difficulty: {business_output_dict['difficulty_score']}")
-            print(f"difficulty reason: {business_output_dict['difficulty_reason']}")
-            # self._ask_questions(business_idea=business_output_dict.get("business_idea"))
 
             print("creating objects")
             try:
