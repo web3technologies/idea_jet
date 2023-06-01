@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-from idea_jet_async.tasks import generate_business_idea_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
+from idea_jet_async.tasks import generate_random_business_idea_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
 from idea_jet_business.models import BusinessIdea
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
@@ -16,16 +16,11 @@ class BusinessIdeaView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, *args, **kwargs):
-        business_idea_generation_sig = generate_business_idea_task.delay(
+        business_idea_generation_sig = generate_random_business_idea_task.delay(
             user_id=self.request.user.id,
             action=self.request.data.get("action"),
             data=self.request.data.get("data")
         )
-        # business_idea_generation_sig = generate_business_idea_task_v4.delay(
-        #     user_id=self.request.user.id,
-        #     action=self.request.data.get("action"),
-        #     data=self.request.data.get("data")
-        # )
         return Response(data={"detail": business_idea_generation_sig.id}, status=status.HTTP_201_CREATED)
 
 
@@ -52,5 +47,6 @@ class BusinessIdeaViewSet(viewsets.ModelViewSet):
             b_idea = BusinessIdea.objects.get(id=self.request.data.get("id"))
             b_idea.user = self.request.user
             b_idea.save(update_fields=["user"])
+            # KPIS? would this be good to generate?
             generate_business_idea_metadata_task.delay(b_idea.id)
         return Response(data={"detail": "saved"}, status=status.HTTP_202_ACCEPTED)

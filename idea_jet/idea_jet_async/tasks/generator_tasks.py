@@ -2,7 +2,7 @@ from celery import shared_task
 
 from idea_jet_async.tasks.base import BaseCeleryTask
 from idea_jet_business.generation import (
-    BusinessIdeaGenerationV2,
+    BusinessIdeaGenerationRandom,
     BusinessIdeaGenerationV3,
     BusinessIdeaGenerationV4,
     CompetitorAnalysisGenerator,
@@ -11,9 +11,9 @@ from idea_jet_business.generation import (
 )
 
 
-@shared_task(bind=True, name="generate_business_idea_task", base=BaseCeleryTask)
-def generate_business_idea_task(self, user_id, action, data, *args, **kwargs):
-    return BusinessIdeaGenerationV2().run(user_id=user_id, action=action, data=data)
+@shared_task(bind=True, name="generate_random_business_idea_task", base=BaseCeleryTask)
+def generate_random_business_idea_task(self, user_id, action, data, *args, **kwargs):
+    return BusinessIdeaGenerationRandom().run(user_id=user_id, action=action, data=data)
 
 
 @shared_task(bind=True, name="generate_business_idea_task_v3", base=BaseCeleryTask)

@@ -3,7 +3,7 @@ from .grouped_tasks import *
 
 
 _generator_tasks = [
-    generate_business_idea_task,
+    generate_random_business_idea_task,
     generate_business_idea_task_v3,
     generate_business_idea_task_v4, 
     generate_competitor_analysis_task,

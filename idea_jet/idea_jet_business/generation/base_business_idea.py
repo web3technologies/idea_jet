@@ -1,23 +1,16 @@
-from django.db import transaction
 from langchain.output_parsers import StructuredOutputParser, ResponseSchema
-from langchain.schema import OutputParserException
 from langchain.schema import HumanMessage
 from langchain.prompts.chat import (
     HumanMessagePromptTemplate, 
     ChatPromptTemplate, 
     SystemMessagePromptTemplate
 )
-import random
 
-from idea_jet_business.models import BusinessIdea, ConversationSummary, ExecutionStep, Feature
 from idea_jet_catalog.models import BusinessModelType, IndustryType
-from idea_jet_business.serializers import BusinessIdeaSerializer
 from idea_jet_business.generation.base import BaseGeneration
-import openai
 
 
-
-class BusinessIdeaGenerationV2(BaseGeneration):
+class BaseBusinessIdea(BaseGeneration):
 
     system_template = """
             You are a very successful entrepreneur. 
@@ -72,6 +65,7 @@ class BusinessIdeaGenerationV2(BaseGeneration):
     system_template_2 = """
         Your task is to perform the following actions:
             1 - Generate a unique, original and detailed business idea
+            2 - Genenerate the product the customers will be purchasing
             2 - Generate a name for this business
             3 - Generate an array of product Key Features and Benefits
             4 - Generate an array of three execution steps
@@ -87,13 +81,17 @@ class BusinessIdeaGenerationV2(BaseGeneration):
 
     tot_template_2 = """
         For each business idea, deepen the thought process. 
-        Generate potential scenarios, strategies for implementation, any necessary partnerships or resources, and how potential obstacles might be overcome. 
+        Generate product, potential scenarios, strategies for implementation, any necessary partnerships or resources, and how potential obstacles might be overcome. 
         Also, consider any potential unexpected outcomes and how they might be handled.
     """
 
     tot_template_3 = """
         Based on the evaluations and scenarios, rank the business ideas in order of promise. 
         Provide a justification for each ranking and offer any final thoughts or considerations for each business idea
+    """
+
+    tot_template_4 = """
+        Pick the most promising business idea that you have selected and return all relevant data, scenar
     """
 
             # - Generate the business model type for the business based on these business models {business_models}
@@ -143,57 +141,13 @@ class BusinessIdeaGenerationV2(BaseGeneration):
         self.response_schemas = [
                 ResponseSchema(name="business_name", description="This is the name of the business you have generated"),
                 ResponseSchema(name="business_idea", description="This is the unique startup business idea you will generate"),
+                ResponseSchema(name="product", description="This is the product you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
                 ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
-                ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
-                ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
+                # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
+                # ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
             ]
         self.output_parser = StructuredOutputParser.from_response_schemas(self.response_schemas)
-
-    @property
-    def idea_generation_mapping(self):
-
-        return {
-            "random": self._generate_random_idea,
-            "custom": self._generate_input_idea,
-            "existing": self._generate_user_idea
-        }
-
-    def _generate_random_idea(self, *args):
-        ### few shot prompting here. Get a list of all companies and add name and business idea to the Catalog and use those as the few shot prompt
-        ### make sure to instruct the ai not to copy but find a competitive advantage
-        ### scrape startup pages to populate the database every day
-        human_template = """
-            Your task is to perform the following actions:
-            1 - Generate a unique startup business idea in the industry delimited by triple backticks. 
-                - Focus the unique startup business idea on quick to build minimum viable products. 
-                - Focus the unique startup business idea on low barier to entry ideas.
-                - Ensure that the unique business idea has a competitive advantage that will set it apart from its competitors.  
-                - The unique startup business idea should be detailed in 100 or more words.
-                - Brainstorm about new opportunities.
-            2 - Generate a name for this unique startup business idea
-            3 - Generate an array of product Key Features and Benefits for this unique startup business idea
-
-            Industry: ```{industry}```
-        """
-            # {format_instructions}
-            # 4 - Generate an array of three execution steps for this unique startup business idea
-            # 5 - Generate a score for how original the unique startup business idea is
-            # 6 - Generate a score for business potential for the unique startup business idea
-            # 7 - Generate a reason for why you chose this potential for the score unique startup business idea
-            # 8 - Generate a startup difficulty score for the unique startup business idea
-            # 9 - Generate a reason for why you chose this difficulty score for the unique startup business idea
-
-        human_prompt = HumanMessagePromptTemplate.from_template(human_template)
-        chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt, self.few_shot_prompt, human_prompt],
-            input_variables=["industry"],
-            # partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
-        )
-        industry = random.choice(self.industries_l)
-        print(industry)
-        business_query = chat_prompt.format_prompt(industry=industry).to_messages()
-        return business_query
         
     def _generate_input_idea(self, data: dict):
         human_template = """
@@ -213,26 +167,6 @@ class BusinessIdeaGenerationV2(BaseGeneration):
             budget=data.get("budget")
             )
         return business_query.to_messages()
-    
-    def _generate_user_idea(self, data: dict):
-        human_template = """I have the start of a business idea and I want you to help me expand on this. Use the idea delimited by tripple back ticks to create a unique business. ```{existingIdea}```"""
-        human_prompt = HumanMessagePromptTemplate.from_template(human_template)
-
-        chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt, human_prompt, self.system_prompt_2],
-            input_variables=["existingIdea"],
-            partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
-        )
-        business_query = chat_prompt.format_prompt(existingIdea=data.get("existingIdea"))
-        return business_query.to_messages()
-    
-
-    def _ask_questions(self, business_idea):
-
-        questions = []
-        for i in range(0,4):
-            question = self.chat_model([HumanMessage(content=f"Ask a question about this bsuiness idea delimited by tripple backticks that can help you understand the idea better. ```{business_idea}```")])
-            print(question.content)
 
 
     def _generate_idea_with_tree_of_thought(self, action):
@@ -251,75 +185,43 @@ class BusinessIdeaGenerationV2(BaseGeneration):
 
         tot_messages.extend(query.to_messages())
 
+        print("performing analysis")
         res = self.chat_model(tot_messages)
-        print(res.content)
         tot_messages.append(res)
         
         tot_messages.append(HumanMessage(content=self.tot_template_2))
         res_2 = self.chat_model(tot_messages)
-        print(res_2.content)
         tot_messages.append(res_2)
 
         tot_messages.append(HumanMessage(content=self.tot_template_3))
         res_3 = self.chat_model(tot_messages)
-        print(res_3.content)
-
-        return res_3
+        tot_messages.append(res_3)
 
 
-    def run(self, user_id, action, data):
-
-        with transaction.atomic():
-
-            business_query = self.idea_generation_mapping[action](data)
-            self.messages.extend(business_query)
-
-            idea_to_use = self._generate_idea_with_tree_of_thought(action)
+        final_idea_template = """
+            Lets think through this step by step:
             
-            self.messages.append(idea_to_use)
-            try:
-                business_output_dict = self.output_parser.parse(idea_to_use.content)
-            except OutputParserException as e:
-                print("json error attempting to fix\n")
-                print(idea_to_use.content + "\n")
-                # catch the exception for the json output and tell chat gpt to correct the json
-                self.messages.append(HumanMessage(content="You outputed incorrect json as described earlier. Fix this and output correct json."))
-                business_output_dict = self.chat_model(self.messages)
-                business_output_dict = self.output_parser.parse(idea_to_use.content)
-
-
-            print("creating objects")
-            try:
-                b_idea = BusinessIdea.objects.create(
-                    business_name=business_output_dict["business_name"],
-                    business_idea=business_output_dict["business_idea"],
-                    # business_model=BusinessModelType.objects.get(business_model_type=business_output_dict["business_model"]),
-                    # industry_type=IndustryType.objects.get(industry_type=business_output_dict["industry_type"]),
-                    original_user=self.user_model.objects.get(id=user_id)
-                )
-            except (BusinessModelType.DoesNotExist, IndustryType.DoesNotExist) as e:
-                print(business_output_dict["business_model"])
-                print(business_output_dict["industry_type"])
-                raise e
+            Based on the idea with the most promise your job is to expand this idea to the best of your ability.
+            Then you should perform the following actions:
             
-            features_to_create = [
-                Feature(
-                    feature=feature,
-                    business_idea=b_idea
-                )
-                for feature in business_output_dict.get("features")
-            ]
-            execution_steps_to_create = [
-                ExecutionStep(
-                    execution_step=execution_step,
-                    business_idea=b_idea
-                )
-                for execution_step in business_output_dict.get("execution_steps")
-            ]
-            Feature.objects.bulk_create(features_to_create)
-            ExecutionStep.objects.bulk_create(execution_steps_to_create)
+            1 - Return the business name you have selected
+            2 - Generate the expanded business idea
+            3 - Then create a list of features for this business idea
+            4 - Then create a list of execution steps for this business idea
 
-        return BusinessIdeaSerializer(b_idea).data
+            {format_instructions}
+        """
+        final_idea_prompt = HumanMessagePromptTemplate.from_template(final_idea_template)
+        final_idea_chat = ChatPromptTemplate(
+            messages=[final_idea_prompt],
+            input_variables=[],
+            partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
+        )
+        tot_messages.extend(final_idea_chat.format_prompt().to_messages())
+        print("generating final output")
+        final_idea = self.chat_model(tot_messages)
+        return final_idea
+
         
 
 
