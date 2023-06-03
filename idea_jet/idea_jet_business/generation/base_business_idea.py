@@ -136,8 +136,6 @@ class BaseBusinessIdea(BaseGeneration):
 
     def __init__(self, model="gpt-3.5-turbo") -> None:
         super().__init__(model)
-        self.industries = list(IndustryType.objects.all().values_list("industry_type", flat=True))
-        self.business_models = list(BusinessModelType.objects.all().values_list("business_model_type", flat=True))
         self.response_schemas = [
                 ResponseSchema(name="business_name", description="This is the name of the business you have generated"),
                 ResponseSchema(name="business_idea", description="This is the unique startup business idea you will generate"),
@@ -223,7 +221,11 @@ class BaseBusinessIdea(BaseGeneration):
         return final_idea
 
         
+    def _generate_idea_with_chain_of_thought():
+        ...
 
+    def _generate_idea_with_react():
+        ...
 
 
     

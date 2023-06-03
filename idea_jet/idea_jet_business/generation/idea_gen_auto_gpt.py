@@ -25,7 +25,7 @@ import faiss
 from langchain.experimental import AutoGPT
 
 
-class BusinessIdeaGenerationV3(BaseGeneration):
+class BusinessIdeaGenerationAutoGpt(BaseGeneration):
 
     def run(self, user_id, action, data):
 

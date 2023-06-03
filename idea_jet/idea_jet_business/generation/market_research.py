@@ -11,6 +11,9 @@ from idea_jet_business.models import BusinessIdea, MarketResearch
 from .base import BaseGeneration
 
 
+### NEED TASKS FOR
+## Launch Strategey
+## Competitor Analysis
 
 class MarketResearchGenerator(BaseGeneration):
 

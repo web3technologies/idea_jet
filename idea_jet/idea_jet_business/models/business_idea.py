@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 from idea_jet_catalog.models import BusinessModelType, IndustryType
+from idea_jet_business.models.business_generation import BusinessGeneration
 
 
 class BusinessIdea(models.Model):
@@ -9,6 +10,13 @@ class BusinessIdea(models.Model):
     business_idea = models.TextField()
     date_generated = models.DateTimeField(auto_now_add=True)
 
+    business_generation = models.ForeignKey(
+        BusinessGeneration, 
+        on_delete=models.DO_NOTHING, 
+        default=None, 
+        null=True,
+        related_name="business_ideas"
+    )
     business_model = models.ForeignKey(BusinessModelType, on_delete=models.DO_NOTHING, default=None, null=True)
     industry_type = models.ForeignKey(IndustryType, on_delete=models.DO_NOTHING, default=None, null=True)
 

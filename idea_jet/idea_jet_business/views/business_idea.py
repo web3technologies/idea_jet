@@ -7,7 +7,7 @@ from rest_framework import viewsets
 from rest_framework.views import APIView
 
 from idea_jet_async.tasks import generate_random_business_idea_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
-from idea_jet_business.models import BusinessIdea
+from idea_jet_business.models import BusinessIdea, BusinessGeneration
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
 
@@ -15,13 +15,22 @@ class BusinessIdeaView(APIView):
 
     permission_classes = [IsAuthenticated]
 
+    task_mapping = {
+        "random": generate_random_business_idea_task,
+        "custom": generate_random_business_idea_task,
+        "existing": generate_random_business_idea_task 
+    }
+
     def post(self, *args, **kwargs):
-        business_idea_generation_sig = generate_random_business_idea_task.delay(
-            user_id=self.request.user.id,
-            action=self.request.data.get("action"),
-            data=self.request.data.get("data")
-        )
-        return Response(data={"detail": business_idea_generation_sig.id}, status=status.HTTP_201_CREATED)
+        with transaction.atomic():
+            b_generation = BusinessGeneration.objects.create(user=self.request.user, type=self.request.data.get("action"))
+            business_idea_generation_sig = generate_random_business_idea_task.delay(
+                user_id=self.request.user.id,
+                action=self.request.data.get("action"),
+                data=self.request.data.get("data"),
+                generation_id=b_generation.id
+            )
+            return Response(data={"detail": business_idea_generation_sig.id}, status=status.HTTP_201_CREATED)
 
 
 class BusinessIdeaViewSet(viewsets.ModelViewSet):

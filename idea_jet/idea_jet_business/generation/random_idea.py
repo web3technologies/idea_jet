@@ -9,7 +9,7 @@ from langchain.prompts.chat import (
 )
 import random
 
-from idea_jet_business.models import BusinessIdea, ConversationSummary, ExecutionStep, Feature
+from idea_jet_business.models import BusinessIdea, BusinessGeneration, ConversationSummary, ExecutionStep, Feature
 from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
@@ -31,6 +31,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
                 - Ensure that the unique business idea has a competitive advantage that will set it apart from its competitors.  
                 - The unique startup business idea should be detailed in 100 or more words.
                 - Brainstorm about new opportunities.
+                - Do you not generate any ideas relating to eco friendly businesses
             2 - Generate a name for this unique startup business idea
             3 - Generate an array of product Key Features and Benefits for this unique startup business idea
 
@@ -55,7 +56,9 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
         return business_query
 
 
-    def run(self, user_id, action, data):
+    def run(self, user_id, action, data, generation_id):
+
+        b_generation = BusinessGeneration.objects.get(id=generation_id)
 
         with transaction.atomic():
 
@@ -80,18 +83,12 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
                 business_output_dict = self.output_parser.parse(idea_to_use.content)
 
             print("creating objects")
-            try:
-                b_idea = BusinessIdea.objects.create(
-                    business_name=business_output_dict["business_name"],
-                    business_idea=business_output_dict["business_idea"],
-                    # business_model=BusinessModelType.objects.get(business_model_type=business_output_dict["business_model"]),
-                    # industry_type=IndustryType.objects.get(industry_type=business_output_dict["industry_type"]),
-                    original_user=self.user_model.objects.get(id=user_id)
-                )
-            except (BusinessModelType.DoesNotExist, IndustryType.DoesNotExist) as e:
-                print(business_output_dict["business_model"])
-                print(business_output_dict["industry_type"])
-                raise e
+            b_idea = BusinessIdea.objects.create(
+                business_name=business_output_dict["business_name"],
+                business_idea=business_output_dict["business_idea"],
+                original_user=self.user_model.objects.get(id=user_id),
+                business_generation=b_generation
+            )
             print(business_output_dict["product"])
             features_to_create = [
                 Feature(
@@ -110,7 +107,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
             Feature.objects.bulk_create(features_to_create)
             ExecutionStep.objects.bulk_create(execution_steps_to_create)
 
-        return BusinessIdeaSerializer(b_idea).data
+        return {"generation_id": b_generation.id}
         
 
 

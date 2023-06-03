@@ -32,7 +32,7 @@ SERP_API_KEY = config("SERP_API_KEY")
 OPEN_API_KEY = config("OPEN_API_KEY")
 
 
-class BusinessIdeaGenerationV4(BaseGeneration):
+class BusinessIdeaGenerationAgent(BaseGeneration):
 
     industries_l = [
         'FinTech',
