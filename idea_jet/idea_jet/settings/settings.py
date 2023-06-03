@@ -192,6 +192,10 @@ LOGGING = {
         'idea_jet_business': {
             'handlers': ['console'],
             'propagate': True,
+        },
+        'idea_jet_async': {
+            'handlers': ['console'],
+            'propagate': True,
         }
     }
 }

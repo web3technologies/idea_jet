@@ -16,8 +16,17 @@ STATICFILES_DIRS = [
     os.path.join("/applications/idea_jet/", "venv/lib/python3.10/site-packages/idea_jet_business/templates/idea_jet_business/")
 ]
 
-CELERY_BROKER_URL = f'sqs://{config("AWS_ACCESS_KEY_ID")}:{config("AWS_SECRET_ACCESS_KEY")}@'
-CELERY_BROKER_TRANSPORT_OPTIONS = {"region": "us-east-2"}
+CELERY_BROKER_URL = "sqs://"
 CELERY_TASK_DEFAULT_QUEUE = 'idea_jet_int'
-CELERY_TASK_DEFAULT_EXCHANGE = 'idea_jet_int'
-CELERY_TASK_DEFAULT_ROUTING_KEY = 'idea_jet_int'
+
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    'region': 'us-east-2',
+    'is_secure': True,
+    'predefined_queues': {
+        'idea_jet_int': {
+            'url': 'https://sqs.us-east-2.amazonaws.com/490305332793/idea_jet_int',
+        },
+    },
+    'visibility_timeout': 3600,
+    'polling_interval': 5.0,
+}
