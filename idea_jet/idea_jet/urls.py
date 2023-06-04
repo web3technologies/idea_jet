@@ -7,7 +7,7 @@ from idea_jet_business.views import LandingPageView, LoginView
 
 
 urlpatterns = [
-    path('', LandingPageView.as_view(), name="landing_page_view"),
+    path('', LandingPageView.as_view(), name="landing_page"),
     path('login/', LoginView.as_view(), name='login'),
     path('admin/', admin.site.urls),
     path("auth/", include("idea_jet_auth.urls")),
