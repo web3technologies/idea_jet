@@ -32,6 +32,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
                 - The unique startup business idea should be detailed in 100 or more words.
                 - Brainstorm about new opportunities.
                 - Do you not generate any ideas relating to eco friendly businesses
+                - Pick a business idea that is not over saturated
             2 - Generate a name for this unique startup business idea
             3 - Generate an array of product Key Features and Benefits for this unique startup business idea
 
@@ -56,7 +57,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
         return business_query
 
 
-    def run(self, user_id, action, data, generation_id):
+    def run(self, user_id, generation_id, *args, **kwargs):
 
         b_generation = BusinessGeneration.objects.get(id=generation_id)
 
@@ -65,7 +66,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
             business_query = self._generate_random_idea()
             self.messages.extend(business_query)
 
-            idea_to_use = self._generate_idea_with_tree_of_thought(action)
+            idea_to_use = self._generate_idea_with_tree_of_thought()
             
             self.messages.append(idea_to_use)
             try:
@@ -107,7 +108,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
             Feature.objects.bulk_create(features_to_create)
             ExecutionStep.objects.bulk_create(execution_steps_to_create)
 
-        return {"generation_id": b_generation.id}
+        return {"business_idea_id": b_idea.id}
         
 
 

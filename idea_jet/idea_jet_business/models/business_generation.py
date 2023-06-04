@@ -7,6 +7,7 @@ class BusinessGeneration(models.Model):
 
     date = models.DateTimeField(auto_now_add=True)
     type = models.CharField()
+    status = models.CharField(default="PENDING")
 
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, 

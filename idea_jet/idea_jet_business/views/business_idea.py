@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-from idea_jet_async.tasks import generate_random_business_idea_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
+from idea_jet_async.tasks import generate_random_business_idea_grouped_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
 from idea_jet_business.models import BusinessIdea, BusinessGeneration
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
@@ -16,21 +16,20 @@ class BusinessIdeaView(APIView):
     permission_classes = [IsAuthenticated]
 
     task_mapping = {
-        "random": generate_random_business_idea_task,
-        "custom": generate_random_business_idea_task,
-        "existing": generate_random_business_idea_task 
+        "random": generate_random_business_idea_grouped_task,
+        "custom": generate_random_business_idea_grouped_task,
+        "existing": generate_random_business_idea_grouped_task 
     }
 
     def post(self, *args, **kwargs):
         with transaction.atomic():
-            b_generation = BusinessGeneration.objects.create(user=self.request.user, type=self.request.data.get("action"))
-            business_idea_generation_sig = generate_random_business_idea_task.delay(
+            type_ = self.request.data.get("action")
+            b_generation = BusinessGeneration.objects.create(user=self.request.user, type=type_)
+            self.task_mapping[type_].delay(
                 user_id=self.request.user.id,
-                action=self.request.data.get("action"),
-                data=self.request.data.get("data"),
-                generation_id=b_generation.id
+                bus_generation_id=b_generation.id
             )
-            return Response(data={"detail": business_idea_generation_sig.id}, status=status.HTTP_201_CREATED)
+            return Response(data={"generation_id": b_generation.id}, status=status.HTTP_201_CREATED)
 
 
 class BusinessIdeaViewSet(viewsets.ModelViewSet):

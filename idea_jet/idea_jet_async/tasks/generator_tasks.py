@@ -12,8 +12,8 @@ from idea_jet_business.generation import (
 
 
 @shared_task(bind=True, name="generate_random_business_idea_task", base=BaseCeleryTask)
-def generate_random_business_idea_task(self, user_id, action, data, generation_id, *args, **kwargs):
-    return BusinessIdeaGenerationRandom().run(user_id=user_id, action=action, data=data, generation_id=generation_id)
+def generate_random_business_idea_task(self, user_id, generation_id, *args, **kwargs):
+    return BusinessIdeaGenerationRandom().run(user_id=user_id, generation_id=generation_id)
 
 
 @shared_task(bind=True, name="generate_business_idea_task_v3", base=BaseCeleryTask)
@@ -36,9 +36,16 @@ def generate_logo_task(self, business_idea_id, n=None, *args, **kwargs):
     return LogoGenerator().run(business_idea_id, n=n)
 
 
+@shared_task(bind=True, name="generate_product_task", base=BaseCeleryTask)
+def generate_product_task(self, business_idea_id, *args, **kwargs):
+    template = f"you are a product designer given this business idea: {business_idea_id} design a product and an mvp"
+    return template
+
+
 @shared_task(bind=True, name="generate_market_research_task", base=BaseCeleryTask)
 def generate_market_research_task(self, business_idea_id, *args, **kwargs):
     return MarketResearchGenerator().run(business_idea_id)
+
 
 
 

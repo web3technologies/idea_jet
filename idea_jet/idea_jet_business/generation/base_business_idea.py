@@ -167,11 +167,11 @@ class BaseBusinessIdea(BaseGeneration):
         return business_query.to_messages()
 
 
-    def _generate_idea_with_tree_of_thought(self, action):
+    def _generate_idea_with_tree_of_thought(self):
         tot_messages = []
         bus_ideas = []
         for i in range(1,4):
-            print(f"generating {action} idea #{i}... \n")
+            print(f"generating random idea #{i}... \n")
             business_output = self.chat_model(self.messages)
             bus_ideas.append(business_output.content)
 
