@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.models.business_generation import BusinessGeneration
@@ -8,7 +9,7 @@ from idea_jet_business.models.business_generation import BusinessGeneration
 class BusinessIdea(models.Model):
     business_name = models.CharField(max_length=255)
     business_idea = models.TextField()
-    date_generated = models.DateTimeField(auto_now_add=True)
+    date_generated = models.DateTimeField(defualt=timezone.now)
     product = models.TextField(default="")
 
     business_generation = models.ForeignKey(
