@@ -1,5 +1,7 @@
 from celery import shared_task
 
+from langchain.schema import OutputParserException
+
 from idea_jet_async.tasks.base import BaseCeleryTask
 from idea_jet_business.generation import (
     BusinessIdeaGenerationRandom,
@@ -11,7 +13,15 @@ from idea_jet_business.generation import (
 )
 
 
-@shared_task(bind=True, name="generate_random_business_idea_task", base=BaseCeleryTask)
+@shared_task(
+        bind=True, 
+        name="generate_random_business_idea_task", 
+        base=BaseCeleryTask,
+        autoretry_for=(OutputParserException, ),
+        max_retries=3,
+        soft_time_limit=1200,
+        time_limit=1300
+        )
 def generate_random_business_idea_task(self, user_id, generation_id, *args, **kwargs):
     return BusinessIdeaGenerationRandom().run(user_id=user_id, generation_id=generation_id)
 
