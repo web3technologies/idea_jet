@@ -62,16 +62,6 @@ class BaseBusinessIdea(BaseGeneration):
                     Collaborates with universities and institutions around the world```
     """
 
-    system_template_2 = """
-        Your task is to perform the following actions:
-            1 - Generate a unique, original and detailed business idea
-            2 - Genenerate the product the customers will be purchasing
-            2 - Generate a name for this business
-            3 - Generate an array of product Key Features and Benefits
-            4 - Generate an array of three execution steps
-            {format_instructions}
-    """
-
     tot_template = """
         For each of the three proposed business ideas delimited by tripple backticks, evaluate their potential. 
         Consider their pros and cons, initial effort needed, implementation difficulty, potential challenges, and the expected outcomes. 
@@ -97,13 +87,12 @@ class BaseBusinessIdea(BaseGeneration):
             # - Generate the business model type for the business based on these business models {business_models}
             # - Generate the industry type the business is in based on these {industry_types}    
     system_prompt = SystemMessagePromptTemplate.from_template(system_template)
-    system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
+    
     few_shot_prompt = SystemMessagePromptTemplate.from_template(few_shot_template)
 
     tot_prompt = HumanMessagePromptTemplate.from_template(tot_template)
     tot_prompt_2 = HumanMessagePromptTemplate.from_template(tot_template_2)
     tot_prompt_3 = HumanMessagePromptTemplate.from_template(tot_template_3)
-
 
     industries_l = [
         'FinTech',
@@ -141,30 +130,8 @@ class BaseBusinessIdea(BaseGeneration):
                 ResponseSchema(name="business_idea", description="This is the unique startup business idea you will generate"),
                 ResponseSchema(name="product", description="This is the product you will generate"),
                 ResponseSchema(name="features", description="This is the array of product features you will generate"),
-                ResponseSchema(name="execution_steps", description="This is the array of three execution steps you will generate"),
-                # ResponseSchema(name="business_model", description="This is the business model type for the business you will generate"),
-                # ResponseSchema(name="industry_type", description="This is the industry type the business is in will generate"),
             ]
         self.output_parser = StructuredOutputParser.from_response_schemas(self.response_schemas)
-        
-    def _generate_input_idea(self, data: dict):
-        human_template = """
-                I am providing you a set of inputs that I want you to tailor the idea to: 
-                - I have skills in: {skills}
-                - I have a budget of: {budget}
-            """
-        human_prompt = HumanMessagePromptTemplate.from_template(human_template)
-
-        chat_prompt = ChatPromptTemplate(
-            messages=[self.system_prompt, human_prompt, self.system_prompt_2],
-            input_variables=["skills", "budget"],
-            partial_variables={"format_instructions": self.output_parser.get_format_instructions()}
-        )
-        business_query = chat_prompt.format_prompt(
-            skills=data.get("skills"), 
-            budget=data.get("budget")
-            )
-        return business_query.to_messages()
 
 
     def _generate_idea_with_tree_of_thought(self):
@@ -195,17 +162,16 @@ class BaseBusinessIdea(BaseGeneration):
         res_3 = self.chat_model(tot_messages)
         tot_messages.append(res_3)
 
-
         final_idea_template = """
             Lets think through this step by step:
             
             Based on the idea with the most promise your job is to expand this idea to the best of your ability.
             Then you should perform the following actions:
             
-            1 - Return the business name you have selected
-            2 - Generate the expanded business idea
-            3 - Then create a list of features for this business idea
-            4 - Then create a list of execution steps for this business idea
+            1 - Generate the expanded business idea
+            2 - Return the business name you have selected
+            3 - Generate a detailed product design
+            4 - Then create a list of features for this business idea
 
             {format_instructions}
         """

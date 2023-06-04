@@ -1,10 +1,10 @@
 from django.core.files.base import ContentFile
+from langchain.schema import HumanMessage
+import openai
+import requests
 
 from idea_jet_business.models import BusinessIdea, Logo
 from idea_jet_business.generation.base import BaseGeneration
-
-import openai
-import requests
 
 
 class LogoGenerator(BaseGeneration):
@@ -16,6 +16,12 @@ class LogoGenerator(BaseGeneration):
 
         b_idea = BusinessIdea.objects.get(id=business_idea_id)
         
+        self.messages.append(
+            HumanMessage(
+                content=f"Given this business idea delimmited by backticks ```{b_idea.business_idea}```describe a design for a logo. Give a simple list of instructions in 25 words."
+            )
+        )
+        description = self.chat_model(self.messages).content
         logos = b_idea.logos.all()
         curr_logo_count = len(logos)
         filename=f"{b_idea.business_name}_{curr_logo_count+n}.png"
@@ -23,7 +29,7 @@ class LogoGenerator(BaseGeneration):
             raise ValueError(f"{filename} logo already exists.")
 
         response = openai.Image.create(
-            prompt=f"Create a clear logo for the business idea delimited by tripple batck ticks ```{b_idea.business_idea}```. Use the business name delimited by apostrophes '{b_idea.business_name}'",
+            prompt=f"Create a clear logo with this description: {description}",
             n=1,
             size="256x256"
         )

@@ -26,12 +26,13 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
         human_template = """
             Your task is to perform the following actions:
             1 - Generate a unique startup business idea in the industry delimited by triple backticks. 
+                - Profitability and financial success is your main goal.
+                - Avoid all ideas related to environment friendly or eco solutions.
                 - Focus the unique startup business idea on quick to build minimum viable products. 
                 - Focus the unique startup business idea on low barier to entry ideas.
                 - Ensure that the unique business idea has a competitive advantage that will set it apart from its competitors.  
                 - The unique startup business idea should be detailed in 100 or more words.
                 - Brainstorm about new opportunities.
-                - Do you not generate any ideas relating to eco friendly businesses
                 - Pick a business idea that is not over saturated
             2 - Generate a name for this unique startup business idea
             3 - Generate an array of product Key Features and Benefits for this unique startup business idea
@@ -87,6 +88,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
             b_idea = BusinessIdea.objects.create(
                 business_name=business_output_dict["business_name"],
                 business_idea=business_output_dict["business_idea"],
+                product=business_output_dict["product"],
                 original_user=self.user_model.objects.get(id=user_id),
                 business_generation=b_generation
             )
@@ -98,15 +100,7 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
                 )
                 for feature in business_output_dict.get("features")
             ]
-            execution_steps_to_create = [
-                ExecutionStep(
-                    execution_step=execution_step,
-                    business_idea=b_idea
-                )
-                for execution_step in business_output_dict.get("execution_steps")
-            ]
             Feature.objects.bulk_create(features_to_create)
-            ExecutionStep.objects.bulk_create(execution_steps_to_create)
 
         return {"business_idea_id": b_idea.id}
         

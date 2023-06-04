@@ -9,6 +9,7 @@ class BusinessIdea(models.Model):
     business_name = models.CharField(max_length=255)
     business_idea = models.TextField()
     date_generated = models.DateTimeField(auto_now_add=True)
+    product = models.TextField(default="")
 
     business_generation = models.ForeignKey(
         BusinessGeneration, 

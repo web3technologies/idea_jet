@@ -16,6 +16,16 @@ from .base_business_idea import BaseBusinessIdea
 
 class BusinessIdeaGenerationInput(BaseBusinessIdea):
 
+    system_template_2 = """
+        Your task is to perform the following actions:
+            1 - Generate a unique, original and detailed business idea
+            2 - Generate a name for this business
+            3 - Genenerate the product the customers will be purchasing
+            4 - Generate an array of product Key Features and Benefits
+            {format_instructions}
+    """
+
+    system_prompt_2 = SystemMessagePromptTemplate.from_template(system_template_2)
     def _generate_input_idea(self, data: dict):
         human_template = """
                 I am providing you a set of inputs that I want you to tailor the idea to: 
