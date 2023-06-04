@@ -19,6 +19,7 @@ from idea_jet_business.generation import (
         base=BaseCeleryTask,
         autoretry_for=(OutputParserException, ),
         max_retries=3,
+        default_retry_delay=3,
         soft_time_limit=1200,
         time_limit=1300
         )
