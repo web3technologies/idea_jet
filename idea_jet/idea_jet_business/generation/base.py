@@ -31,5 +31,21 @@ class BaseGeneration:
     #     llm=ChatOpenAI(temperature=1, openai_api_key=OPEN_API_KEY, model="gpt-3.5-turbo")
     # )
 
+    def _perform_pre_generation_research(self):
+        pre = "You are a helpful business assistant"
+        one = """
+            Given this industry {} I want you to perform some reasearch.
+
+            Research you will perform:
+            1 - Find problems in the industry, 
+            2 - Discover some interesting facts, 
+            3 - Gather important financial statistics, 
+            4 - Look for a problem that could be solved and monetized by a new business
+            5 - Understand industry trends, market dynamics, and consumer behavior
+            6 - Look for businesses that exist,
+        """
+        three = "Based on your previous research create a business idea that will provide a new value proposition that can capitalize on new opportunities"
+
+
 
     

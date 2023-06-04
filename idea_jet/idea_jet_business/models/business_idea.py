@@ -9,7 +9,7 @@ from idea_jet_business.models.business_generation import BusinessGeneration
 class BusinessIdea(models.Model):
     business_name = models.CharField(max_length=255)
     business_idea = models.TextField()
-    date_generated = models.DateTimeField(defualt=timezone.now)
+    date_generated = models.DateTimeField(default=timezone.now)
     product = models.TextField(default="")
 
     business_generation = models.ForeignKey(

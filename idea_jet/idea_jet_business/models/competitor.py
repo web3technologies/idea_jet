@@ -1,12 +1,13 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
+from django.utils import timezone
 
 from idea_jet_business.models import BusinessIdea
 
 
 class Competitor(models.Model):
 
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
 
     name = models.CharField(max_length=255)
     overview = models.TextField()

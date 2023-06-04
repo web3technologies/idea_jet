@@ -1,11 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 from idea_jet_business.models import BusinessIdea
 
 
 class MarketResearch(models.Model):
     
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
 
     target_market=models.TextField()
     market_size=models.TextField()

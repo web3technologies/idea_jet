@@ -1,11 +1,12 @@
 from django.db import models
+from django.utils import timezone
 
 from idea_jet_business.models import BusinessIdea
 
 
 class ConversationSummary(models.Model):
     
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(default=timezone.now)
     summary = models.TextField()
     type = models.CharField(choices=(("INITIAL", "INITIAL"), ))
 
