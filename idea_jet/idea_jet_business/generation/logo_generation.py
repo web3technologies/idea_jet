@@ -23,7 +23,7 @@ class LogoGenerator(BaseGeneration):
             raise ValueError(f"{filename} logo already exists.")
 
         response = openai.Image.create(
-            prompt=f"Create a logo for this business idea: {b_idea.business_idea}",
+            prompt=f"Create a clear logo for the business idea delimited by tripple batck ticks ```{b_idea.business_idea}```. Use the business name delimited by apostrophes '{b_idea.business_name}'",
             n=1,
             size="256x256"
         )
