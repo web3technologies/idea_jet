@@ -5,8 +5,6 @@ from langchain.prompts.chat import (
     ChatPromptTemplate, 
     SystemMessagePromptTemplate
 )
-
-from idea_jet_catalog.models import BusinessModelType, IndustryType
 from idea_jet_business.generation.base import BaseGeneration
 
 
@@ -185,13 +183,5 @@ class BaseBusinessIdea(BaseGeneration):
         print("generating final output")
         final_idea = self.chat_model(tot_messages)
         return final_idea
-
-        
-    def _generate_idea_with_chain_of_thought():
-        ...
-
-    def _generate_idea_with_react():
-        ...
-
 
     

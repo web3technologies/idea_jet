@@ -39,14 +39,6 @@ class BusinessIdeaGenerationRandom(BaseBusinessIdea):
 
             Industry: ```{industry}```
         """
-            # {format_instructions}
-            # 4 - Generate an array of three execution steps for this unique startup business idea
-            # 5 - Generate a score for how original the unique startup business idea is
-            # 6 - Generate a score for business potential for the unique startup business idea
-            # 7 - Generate a reason for why you chose this potential for the score unique startup business idea
-            # 8 - Generate a startup difficulty score for the unique startup business idea
-            # 9 - Generate a reason for why you chose this difficulty score for the unique startup business idea
-
         human_prompt = HumanMessagePromptTemplate.from_template(human_template)
         chat_prompt = ChatPromptTemplate(
             messages=[self.system_prompt, self.few_shot_prompt, human_prompt],

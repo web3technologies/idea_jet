@@ -4,8 +4,6 @@ from .grouped_tasks import *
 
 _generator_tasks = [
     generate_random_business_idea_task,
-    generate_business_idea_task_v3,
-    generate_business_idea_task_v4, 
     generate_competitor_analysis_task,
     generate_logo_task,
     generate_market_research_task,

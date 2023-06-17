@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework import viewsets
 from rest_framework.views import APIView
 
-from idea_jet_async.tasks import generate_random_business_idea_grouped_task, generate_business_idea_task_v3, generate_business_idea_task_v4, generate_business_idea_metadata_task 
+from idea_jet_async.tasks import generate_random_business_idea_grouped_task, generate_business_idea_metadata_task 
 from idea_jet_business.models import BusinessIdea, BusinessGeneration
 from idea_jet_business.serializers import BusinessIdeaSerializer
 
